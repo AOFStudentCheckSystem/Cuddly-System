@@ -1,4 +1,4 @@
-package cn.com.guardiantech.checkin.server.dataobjects
+package cn.com.guardiantech.checkin.server.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -17,6 +17,10 @@ class ActivityEvent() {
 
     constructor(eventName: String): this() {
         this.eventName = eventName
+    }
+
+    constructor(eventName: String, eventTime: Date) : this(eventName) {
+        this.eventTime = eventTime
     }
 
     @Id

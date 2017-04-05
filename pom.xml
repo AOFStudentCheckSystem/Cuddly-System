@@ -27,6 +27,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>cn.codetector.jet</groupId>
+			<artifactId>jet-simple-json</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
@@ -117,5 +122,29 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>codetectorRepoRelease</id>
+			<name>codetectorRelease</name>
+			<url>http://nexus.codetector.cn/repository/codetector/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>codetectorRepoStage</id>
+			<name>codetectorStaging</name>
+			<url>http://nexus.codetector.cn/repository/codetector-staging/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 </project>

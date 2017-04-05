@@ -1,4 +1,4 @@
-package cn.com.guardiantech.checkin.server.dataobjects
+package cn.com.guardiantech.checkin.server.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
