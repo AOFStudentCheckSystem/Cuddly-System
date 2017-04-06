@@ -26,6 +26,10 @@ class ActivityEventRecord {
     @JoinColumn(name = "event")
     lateinit var event: ActivityEvent
 
+    var signupTime: Long = -1
+
+    var checkInTime: Long = -1
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
@@ -43,5 +47,4 @@ class ActivityEventRecord {
         result = 31 * result + event.hashCode()
         return result
     }
-
 }
