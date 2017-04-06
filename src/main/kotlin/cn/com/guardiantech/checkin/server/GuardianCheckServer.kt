@@ -11,8 +11,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @SpringBootApplication
 @EnableJpaRepositories
 class GuardianCheckServer {
-}
-
-fun main(args: Array<String>) {
-    SpringApplication.run(GuardianCheckServer::class.java, *args)
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            SpringApplication.run(GuardianCheckServer::class.java, *args)
+        }
+    }
 }

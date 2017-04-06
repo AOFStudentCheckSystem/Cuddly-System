@@ -40,4 +40,6 @@ class EventController {
     fun listAllEvents(): ResponseEntity<MutableMap<String, MutableList<ActivityEvent>>> {
         return ResponseEntity(Collections.singletonMap("events", eventRepo.findAll()), HttpStatus.OK)
     }
+
+
 }

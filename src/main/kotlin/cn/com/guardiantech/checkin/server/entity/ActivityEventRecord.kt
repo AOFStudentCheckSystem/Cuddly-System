@@ -25,4 +25,23 @@ class ActivityEventRecord {
     @OneToOne(optional = false, orphanRemoval = true)
     @JoinColumn(name = "event")
     lateinit var event: ActivityEvent
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as ActivityEventRecord
+
+        if (student != other.student) return false
+        if (event != other.event) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = student.hashCode()
+        result = 31 * result + event.hashCode()
+        return result
+    }
+
 }
