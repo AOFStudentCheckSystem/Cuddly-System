@@ -26,7 +26,7 @@ class ActivityEvent() {
     @Id
     @GeneratedValue
     @JsonIgnore
-    var id: Long = 0
+    var id: Int = 0
 
     @Column(unique = true)
     var eventId: String = System.currentTimeMillis().toString(36).toLowerCase()
