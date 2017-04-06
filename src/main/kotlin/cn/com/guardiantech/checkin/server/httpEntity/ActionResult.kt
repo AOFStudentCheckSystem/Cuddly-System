@@ -1,6 +1,8 @@
 package cn.com.guardiantech.checkin.server.httpEntity
 
 import cn.codetector.jet.jetsimplejson.JSONObject
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 
 /**
  * Created by Codetector on 2017/4/5.
@@ -21,5 +23,9 @@ class ActionResult(val success: Boolean) {
         }
 
         return returnObject.put("success", success).encode()
+    }
+
+    fun encode(): ResponseEntity<String> {
+        return ResponseEntity(this.toString(), if(success) HttpStatus.OK else HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

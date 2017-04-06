@@ -18,7 +18,7 @@ import java.util.*
  * Project backend
  */
 @RestController()
-@RequestMapping(path = arrayOf("/event"), produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+@RequestMapping(path = arrayOf("/event"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class EventController {
 
     @Autowired
