@@ -2,7 +2,7 @@ server:
   port: 10493
 spring:
   datasource:
-    url: jdbc:mysql://${dbaddr:localhost}:${dbport:3306}/${dbname:GuardianCheck2}?useSSL=${useSSL:false}
+    url: jdbc:mysql://${dbaddr:localhost}:${dbport:3306}/${dbname:GuardianCheck2}?useUnicode=yes&characterEncoding=UTF-8&useSSL=${useSSL:false}
     username: ${dbuser:root}
     password: ${dbpass}
     dbcp2:
