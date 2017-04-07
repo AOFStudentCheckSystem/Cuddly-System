@@ -2,6 +2,9 @@ package cn.com.guardiantech.checkin.server.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
 
 /**
@@ -17,12 +20,14 @@ class ActivityEventRecord {
     @JsonIgnore
     var id: Long = 0
 
-    @OneToOne(optional = false, orphanRemoval = true )
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "student")
     lateinit var student: Student
 
     @JsonManagedReference
-    @OneToOne(optional = false, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "event")
     lateinit var event: ActivityEvent
 

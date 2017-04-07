@@ -25,8 +25,8 @@ class EventController {
     lateinit var eventRepo: EventRepository
 
     @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
-    fun createEvent(@RequestParam(name = "name") name: String,
-                    @RequestParam(name = "time", required = false, defaultValue = "0") time: Long): String {
+    fun createEvent(@RequestParam("name") name: String,
+                    @RequestParam("time", required = false, defaultValue = "0") time: Long): String {
         val eventDate:Date = if (time == 0L) { Date() } else { Date(time * 1000) }
         try {
             eventRepo.save(ActivityEvent(name, eventDate))
