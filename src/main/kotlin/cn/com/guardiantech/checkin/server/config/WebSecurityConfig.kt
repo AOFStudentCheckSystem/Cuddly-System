@@ -25,6 +25,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
     }
 
     override fun configure(http: HttpSecurity) {
+        http.csrf().disable()
         http.antMatcher("/**")
                 .addFilterBefore(AuthenticationFilter(authenticationService), BasicAuthenticationFilter::class.java)
     }
