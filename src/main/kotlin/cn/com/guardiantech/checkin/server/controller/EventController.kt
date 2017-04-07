@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
+import javax.websocket.server.PathParam
 
 /**
  * Created by Codetector on 2017/4/4.
@@ -23,6 +24,11 @@ class EventController {
 
     @Autowired
     lateinit var eventRepo: EventRepository
+
+    @RequestMapping(path = arrayOf("/remove/{id}"))
+    fun removeEvent(@PathParam("id") eventID: String): ResponseEntity<String> {
+        return ActionResult(eventRepo.removeByEventId(eventID) > 0).encode()
+    }
 
     @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
     fun createEvent(@RequestParam("name") name: String,
