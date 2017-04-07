@@ -205,6 +205,7 @@
                     <basePath>http://hn2.guardiantech.com.cn:10493/</basePath>
                     <packages>
                         <package>cn.com.guardiantech.checkin.server.controller</package>
+                        <package>cn.com.guardiantech.checkin.server.entity</package>
                         <package>cn.com.guardiantech.checkin.server</package>
                     </packages>
                     <outputFile>${project.build.directory}/jsondoc-ui/jsondoc.json</outputFile>

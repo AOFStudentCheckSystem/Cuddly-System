@@ -33,13 +33,13 @@ class AuthController {
     lateinit var userTokenRepository: UserTokenRepository
 
     @RequestMapping(path = arrayOf("/logout"))
-    fun revokeToken(@RequestParam(name = "token") token: String) {
+    fun revokeToken(@RequestParam("token") token: String) {
         userTokenRepository.deleteByTokenSecretIgnoreCase(token)
     }
 
     @RequestMapping(path = arrayOf("/register"), method = arrayOf(RequestMethod.POST))
-    fun registerUser(@RequestParam(name = "email") email: String,
-                     @RequestParam(name = "password") password: String): ResponseEntity<String> {
+    fun registerUser(@RequestParam("email") email: String,
+                     @RequestParam("password") password: String): ResponseEntity<String> {
         try {
             userRepository.save(User(email, DigestUtils.sha256Hex(password)))
             return ActionResult(true).encode()
@@ -49,8 +49,8 @@ class AuthController {
     }
 
     @RequestMapping(path = arrayOf("/auth"), method = arrayOf(RequestMethod.POST))
-    fun authenticate(@RequestParam(name = "email") email: String,
-                     @RequestParam(name = "password") password: String): UserToken {
+    fun authenticate(@RequestParam("email") email: String,
+                     @RequestParam("password") password: String): UserToken {
         val response = JSONObject()
         try {
             val user = userRepository.findByEmailIgnoreCase(email).get()
