@@ -9,13 +9,13 @@ import javax.persistence.*
  * Project backend
  */
 @Entity
-class User {
-    constructor(email: String, passwordHash: String) {
+class User() {
+    constructor(email: String, passwordHash: String) : this() {
         this.email = email
         this.passwordHash = passwordHash
     }
 
-    constructor(email: String, passwordHash: String, student: Student?) {
+    constructor(email: String, passwordHash: String, student: Student?) : this() {
         this.email = email
         this.passwordHash = passwordHash
         this.student = student
@@ -23,6 +23,7 @@ class User {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     var userId: Long = 0
 
     @Column(unique = true)
