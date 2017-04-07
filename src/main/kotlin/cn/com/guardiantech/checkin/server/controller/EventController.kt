@@ -7,12 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
-import javax.websocket.server.PathParam
 
 /**
  * Created by Codetector on 2017/4/4.
@@ -26,7 +22,7 @@ class EventController {
     lateinit var eventRepo: EventRepository
 
     @RequestMapping(path = arrayOf("/remove/{id}"))
-    fun removeEvent(@PathParam("id") eventID: String): ResponseEntity<String> {
+    fun removeEvent(@PathVariable("id") eventID: String): ResponseEntity<String> {
         return ActionResult(eventRepo.removeByEventId(eventID) > 0).encode()
     }
 
