@@ -3,6 +3,7 @@ package cn.com.guardiantech.checkin.server.repository
 import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.repository.PagingAndSortingRepository
+import java.util.*
 import javax.transaction.Transactional
 
 /**
@@ -15,4 +16,6 @@ interface EventRepository : PagingAndSortingRepository<ActivityEvent, Long>{
     @Modifying
     @Transactional
     fun removeByEventId(eventID: String): Long
+
+    fun findByEventId(eventID: String): Optional<ActivityEvent>
 }
