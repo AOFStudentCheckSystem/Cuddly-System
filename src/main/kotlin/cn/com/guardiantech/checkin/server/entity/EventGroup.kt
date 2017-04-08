@@ -15,7 +15,7 @@ class EventGroup() {
         this.name = name
     }
 
-    constructor(name: String, events: Set<ActivityEvent>): this(name) {
+    constructor(name: String, events: MutableSet<ActivityEvent>): this(name) {
         this.events = events
     }
 
@@ -26,5 +26,5 @@ class EventGroup() {
     var name: String = ""
 
     @ManyToMany
-    var events: Set<ActivityEvent> = emptySet()
+    var events: MutableSet<ActivityEvent> = hashSetOf()
 }

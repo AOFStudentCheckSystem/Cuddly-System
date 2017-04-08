@@ -1,5 +1,6 @@
 package cn.com.guardiantech.checkin.server.repository
 
+import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import cn.com.guardiantech.checkin.server.entity.EventGroup
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.repository.CrudRepository
@@ -12,6 +13,8 @@ import javax.transaction.Transactional
  */
 interface EventGroupRepository: CrudRepository<EventGroup, Long> {
     fun findById(id: Long): Optional<EventGroup>
+
+    override fun findAll(): MutableList<EventGroup>
 
     @Modifying
     @Transactional

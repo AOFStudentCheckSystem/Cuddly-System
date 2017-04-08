@@ -31,7 +31,7 @@ class EventGroupController {
     @RequestMapping(path = arrayOf("/new"), method = arrayOf(RequestMethod.POST))
     fun createGroup(@RequestParam("name") name: String,
                     @RequestParam("groupItems", required = false, defaultValue = "[]") items: String): ResponseEntity<String> {
-        val eventIds  = JSONArray(items)
+        val eventIds = JSONArray(items)
         val events: MutableList<ActivityEvent> = ArrayList()
         eventIds.forEach {
             events.add(eventRepo.findByEventId(it.toString()).get())
@@ -40,10 +40,44 @@ class EventGroupController {
         return ActionResult(true).encode()
     }
 
-    @RequestMapping(path = arrayOf("/list"))
-    fun listAllEvents(): ResponseEntity<MutableMap<String, MutableList<ActivityEvent>>> {
-        return ResponseEntity(Collections.singletonMap("events", eventRepo.findAll()), HttpStatus.OK)
+    @RequestMapping(path = arrayOf("/edit/{groupId}/add"), method = arrayOf(RequestMethod.POST))
+    fun addEventToGroup(@RequestParam("eventId") eventId: String,
+                        @PathVariable("groupId") groupId: Long): ResponseEntity<String> {
+        val targetGroup = eventGroupRepo.findById(groupId).get()
+        val targetEvent = eventRepo.findByEventId(eventId).get()
+        targetGroup.events.add(targetEvent)
+        eventGroupRepo.save(targetGroup)
+        return ActionResult(success = true).encode()
     }
 
+    @RequestMapping(path = arrayOf("/edit/{groupId}/remove"), method = arrayOf(RequestMethod.POST))
+    fun removeEventFromGroup(@RequestParam("eventId") eventId: String,
+                             @PathVariable("groupId") groupId: Long): ResponseEntity<String> {
+        val targetGroup = eventGroupRepo.findById(groupId).get()
+        val targetEvent = eventRepo.findByEventId(eventId).get()
+        val result = targetGroup.events.remove(targetEvent)
+        eventGroupRepo.save(targetGroup)
+        return ActionResult(success = result).encode()
+    }
+
+    @RequestMapping(path = arrayOf("/edit/{groupId}/set"), method = arrayOf(RequestMethod.POST))
+    fun setEventToGroup(@RequestParam("eventList") items: String,
+                        @PathVariable("groupId") groupId: Long): ResponseEntity<String> {
+        val targetGroup = eventGroupRepo.findById(groupId).get()
+        val eventIds = JSONArray(items)
+        val events: MutableList<ActivityEvent> = ArrayList()
+        eventIds.forEach {
+            events.add(eventRepo.findByEventId(it.toString()).get())
+        }
+        targetGroup.events.clear()
+        targetGroup.events.addAll(events)
+        eventGroupRepo.save(targetGroup)
+        return ActionResult(success = true).encode()
+    }
+
+    @RequestMapping(path = arrayOf("/list"))
+    fun listAllEvents(): ResponseEntity<MutableMap<String, MutableList<EventGroup>>> {
+        return ResponseEntity(Collections.singletonMap("eventGroups", eventGroupRepo.findAll()), HttpStatus.OK)
+    }
 
 }
