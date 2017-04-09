@@ -23,6 +23,10 @@ class ActivityEvent() {
         this.eventTime = eventTime
     }
 
+    constructor(eventName: String, eventTime: Date, eventdescription: String): this(eventName, eventTime) {
+        this.eventDescription = eventdescription
+    }
+
     @Id
     @GeneratedValue
     var id: Int = 0
@@ -31,6 +35,9 @@ class ActivityEvent() {
     var eventId: String = System.currentTimeMillis().toString(36).toLowerCase()
 
     lateinit var eventName: String
+
+    @Lob
+    var eventDescription: String = ""
 
     var eventTime: Date = Date()
 

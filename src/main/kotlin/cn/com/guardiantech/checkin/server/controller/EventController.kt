@@ -30,6 +30,7 @@ class EventController {
 
     @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
     fun createEvent(@RequestParam("name") name: String,
+                    @RequestParam("descriptions", required = false, defaultValue = "") description: String,
                     @RequestParam("time", required = false, defaultValue = "0") time: Long): String {
         val eventDate: Date = if (time == 0L) {
             Date()
@@ -37,7 +38,7 @@ class EventController {
             Date(time * 1000)
         }
         try {
-            eventRepo.save(ActivityEvent(name, eventDate))
+            eventRepo.save(ActivityEvent(name, eventDate, description))
             return ActionResult(true).toString()
         } catch (e: Throwable) {
             return ActionResult(e).toString()
