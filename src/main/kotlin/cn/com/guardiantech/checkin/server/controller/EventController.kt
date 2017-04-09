@@ -31,7 +31,11 @@ class EventController {
     @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
     fun createEvent(@RequestParam("name") name: String,
                     @RequestParam("time", required = false, defaultValue = "0") time: Long): String {
-        val eventDate:Date = if (time == 0L) { Date() } else { Date(time * 1000) }
+        val eventDate: Date = if (time == 0L) {
+            Date()
+        } else {
+            Date(time * 1000)
+        }
         try {
             eventRepo.save(ActivityEvent(name, eventDate))
             return ActionResult(true).toString()
@@ -41,8 +45,8 @@ class EventController {
     }
 
     @RequestMapping(path = arrayOf("/list"))
-    fun listAllEvents(pageable: Pageable): ResponseEntity<MutableMap<String, Page<ActivityEvent>>> {
-        return ResponseEntity(Collections.singletonMap("events", eventRepo.findAll(pageable)), HttpStatus.OK)
+    fun listAllEvents(pageable: Pageable): Page<ActivityEvent> {
+        return eventRepo.findAll(pageable)
     }
 
 
