@@ -1,6 +1,7 @@
 package cn.com.guardiantech.checkin.server.controller
 
 import cn.codetector.jet.jetsimplejson.JSONObject
+import cn.com.guardiantech.checkin.server.authentication.Token
 import cn.com.guardiantech.checkin.server.entity.authentication.User
 import cn.com.guardiantech.checkin.server.entity.authentication.UserToken
 import cn.com.guardiantech.checkin.server.exception.UnauthorizedException
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -33,8 +35,8 @@ class AuthController {
     lateinit var userTokenRepository: UserTokenRepository
 
     @RequestMapping(path = arrayOf("/logout"))
-    fun revokeToken(@RequestParam("token") token: String) {
-        userTokenRepository.deleteByTokenSecretIgnoreCase(token)
+    fun revokeToken(@AuthenticationPrincipal p: Token) {
+        userTokenRepository.deleteByTokenSecretIgnoreCase(p.tokenSecret)
     }
 
     @RequestMapping(path = arrayOf("/register"), method = arrayOf(RequestMethod.POST))
@@ -64,4 +66,7 @@ class AuthController {
             throw UnauthorizedException()
         }
     }
+
+    @RequestMapping(path = arrayOf("/verify"))
+    fun verifyToken(@AuthenticationPrincipal token: Token) = token
 }
