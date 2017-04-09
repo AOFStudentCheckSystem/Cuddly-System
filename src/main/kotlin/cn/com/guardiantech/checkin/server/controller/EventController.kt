@@ -4,6 +4,8 @@ import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EventRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -39,8 +41,8 @@ class EventController {
     }
 
     @RequestMapping(path = arrayOf("/list"))
-    fun listAllEvents(): ResponseEntity<MutableMap<String, MutableList<ActivityEvent>>> {
-        return ResponseEntity(Collections.singletonMap("events", eventRepo.findAll()), HttpStatus.OK)
+    fun listAllEvents(pageable: Pageable): ResponseEntity<MutableMap<String, Page<ActivityEvent>>> {
+        return ResponseEntity(Collections.singletonMap("events", eventRepo.findAll(pageable)), HttpStatus.OK)
     }
 
 
