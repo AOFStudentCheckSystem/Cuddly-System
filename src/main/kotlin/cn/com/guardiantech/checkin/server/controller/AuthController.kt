@@ -50,7 +50,7 @@ class AuthController {
         }
     }
 
-    @RequestMapping(path = arrayOf("/auth"), method = arrayOf(RequestMethod.POST))
+    @RequestMapping(path = arrayOf("/auth", "/login"), method = arrayOf(RequestMethod.POST))
     fun authenticate(@RequestParam("email") email: String,
                      @RequestParam("password") password: String): UserToken {
         val response = JSONObject()
