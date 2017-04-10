@@ -8,6 +8,7 @@ import cn.com.guardiantech.checkin.server.repository.EventGroupRepository
 import cn.com.guardiantech.checkin.server.repository.SignUpSheetRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -17,7 +18,7 @@ import java.util.*
  * Project backend
  */
 @RestController
-@RequestMapping(path = arrayOf("/signup"))
+@RequestMapping(path = arrayOf("/signup"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class SignupController {
     @Autowired
     lateinit var sheetRepository: SignUpSheetRepository
@@ -25,7 +26,7 @@ class SignupController {
     @Autowired
     lateinit var groupRepository: EventGroupRepository
 
-    @PostMapping(path = arrayOf("/create"))
+    @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
     fun createSheet(@RequestParam("name") sheetName: String,
                     @RequestParam("groups", required = false, defaultValue = "[]") groups: String): ResponseEntity<String> {
         try {
@@ -43,7 +44,7 @@ class SignupController {
         }
     }
 
-    @PostMapping(path = arrayOf("/edit/{id}/add"))
+    @RequestMapping(path = arrayOf("/edit/{id}/add"), method = arrayOf(RequestMethod.POST))
     fun addGroupToSheet(@RequestParam("group") group: Long,
                         @PathVariable("id") sheetId:Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
@@ -53,7 +54,7 @@ class SignupController {
         return ActionResult(true).encode()
     }
 
-    @PostMapping(path = arrayOf("/edit/{id}/remove"))
+    @RequestMapping(path = arrayOf("/edit/{id}/remove"), method = arrayOf(RequestMethod.POST))
     fun removeGroupFromSheet(@RequestParam("group") group: Long,
                              @PathVariable("id") sheetId:Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
@@ -63,7 +64,7 @@ class SignupController {
         return ActionResult(result, HttpStatus.NOT_ACCEPTABLE).encode()
     }
 
-    @PostMapping(path = arrayOf("/edit/{id}/set"))
+    @RequestMapping(path = arrayOf("/edit/{id}/set"), method = arrayOf(RequestMethod.POST))
     fun setGroupToSheet(@RequestParam("group") groups: String,
                         @PathVariable("id") sheetId:Long): ResponseEntity<String> {
         try {
@@ -82,17 +83,17 @@ class SignupController {
         }
     }
 
-    @GetMapping(path = arrayOf("/list"))
+    @RequestMapping(path = arrayOf("/list"), method = arrayOf(RequestMethod.GET))
     fun listAll(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", sheetRepository.findAll()), HttpStatus.OK)
     }
 
-    @GetMapping(path = arrayOf("/list/current"))
+    @RequestMapping(path = arrayOf("/list/current"), method = arrayOf(RequestMethod.GET))
     fun listOpenSheet(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(1)), HttpStatus.OK)
     }
 
-    @GetMapping(path = arrayOf("/list/future"))
+    @RequestMapping(path = arrayOf("/list/future"), method = arrayOf(RequestMethod.GET))
     fun listFuture(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(0)), HttpStatus.OK)
     }
