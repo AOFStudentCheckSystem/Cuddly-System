@@ -18,7 +18,6 @@ import java.util.*
  * Project backend
  */
 @RestController
-@CrossOrigin
 @RequestMapping(path = arrayOf("/signup"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class SignupController {
     @Autowired
@@ -84,17 +83,17 @@ class SignupController {
         }
     }
 
-    @RequestMapping(path = arrayOf("/list"), method = arrayOf(RequestMethod.GET))
+    @GetMapping(path = arrayOf("/list"))
     fun listAll(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", sheetRepository.findAll()), HttpStatus.OK)
     }
 
-    @RequestMapping(path = arrayOf("/list/current"), method = arrayOf(RequestMethod.GET))
+    @GetMapping(path = arrayOf("/list/current"))
     fun listOpenSheet(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(1)), HttpStatus.OK)
     }
 
-    @RequestMapping(path = arrayOf("/list/future"), method = arrayOf(RequestMethod.GET))
+    @GetMapping(path = arrayOf("/list/future"))
     fun listFuture(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(0)), HttpStatus.OK)
     }

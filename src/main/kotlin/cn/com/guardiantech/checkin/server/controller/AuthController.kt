@@ -22,7 +22,6 @@ import java.util.NoSuchElementException
  * Project backend
  */
 @RestController
-@CrossOrigin
 @RequestMapping(path = arrayOf("/auth"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class AuthController {
 
@@ -31,6 +30,9 @@ class AuthController {
 
     @Autowired
     lateinit var userTokenRepository: UserTokenRepository
+
+    @RequestMapping(path = arrayOf("/**"), method = arrayOf(RequestMethod.OPTIONS))
+    fun cors(){}
 
     @RequestMapping(path = arrayOf("/logout"))
     fun revokeToken(@AuthenticationPrincipal p: Token) {
