@@ -1,6 +1,6 @@
 package cn.com.guardiantech.checkin.server.entity
 
-import org.hibernate.annotations.OnDelete
+import org.jsondoc.core.annotation.ApiObjectField
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -18,6 +18,7 @@ class SignUpSheet() {
 
     @Id
     @GeneratedValue
+    @ApiObjectField(description = "0 -> Scheduled, 1 -> Open, -1 -> Closed")
     var id: Long = 0
 
     var status: Int = 0
@@ -25,5 +26,5 @@ class SignUpSheet() {
     lateinit var name: String
 
     @ManyToMany
-    var events:Set<EventGroup> = emptySet()
+    var events:MutableSet<EventGroup> = hashSetOf()
 }

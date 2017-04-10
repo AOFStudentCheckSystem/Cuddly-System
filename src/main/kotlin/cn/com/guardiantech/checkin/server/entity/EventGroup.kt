@@ -27,4 +27,15 @@ class EventGroup() {
 
     @ManyToMany
     var events: MutableSet<ActivityEvent> = hashSetOf()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as EventGroup
+
+        if (id != other.id) return false
+
+        return true
+    }
 }

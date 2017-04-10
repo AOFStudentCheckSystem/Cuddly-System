@@ -1,6 +1,7 @@
 package cn.com.guardiantech.checkin.server.httpEntity
 
 import cn.codetector.jet.jetsimplejson.JSONObject
+import com.sun.org.apache.xpath.internal.operations.Bool
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -9,7 +10,12 @@ import org.springframework.http.ResponseEntity
  * Project backend
  */
 class ActionResult(val success: Boolean) {
-    private var t: Throwable? = null
+    var t: Throwable? = null
+    var errorStatus = HttpStatus.INTERNAL_SERVER_ERROR
+
+    constructor(result: Boolean, errorCode: HttpStatus): this(result) {
+        this.errorStatus = errorCode
+    }
 
     constructor(t: Throwable) : this(false) {
         this.t = t
@@ -26,6 +32,6 @@ class ActionResult(val success: Boolean) {
     }
 
     fun encode(): ResponseEntity<String> {
-        return ResponseEntity(this.toString(), if(success) HttpStatus.OK else HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity(this.toString(), if(success) HttpStatus.OK else errorStatus)
     }
 }

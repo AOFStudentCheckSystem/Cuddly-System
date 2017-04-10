@@ -11,6 +11,7 @@ import javax.transaction.Transactional
  * Project backend
  */
 interface SignUpSheetRepository : CrudRepository<SignUpSheet, Long> {
+    override fun findAll(): List<SignUpSheet>
     fun findByStatus(status: Int): List<SignUpSheet>
     fun findById(id: Long): Optional<SignUpSheet>
 

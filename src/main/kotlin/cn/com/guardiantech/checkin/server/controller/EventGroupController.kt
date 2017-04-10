@@ -57,7 +57,7 @@ class EventGroupController {
         val targetEvent = eventRepo.findByEventId(eventId).get()
         val result = targetGroup.events.remove(targetEvent)
         eventGroupRepo.save(targetGroup)
-        return ActionResult(success = result).encode()
+        return ActionResult(result, HttpStatus.BAD_REQUEST).encode()
     }
 
     @RequestMapping(path = arrayOf("/edit/{groupId}/set"), method = arrayOf(RequestMethod.POST))

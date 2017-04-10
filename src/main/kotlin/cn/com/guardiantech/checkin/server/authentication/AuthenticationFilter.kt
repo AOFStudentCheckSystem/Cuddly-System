@@ -1,9 +1,6 @@
 package cn.com.guardiantech.checkin.server.authentication
 
-import cn.com.guardiantech.checkin.server.exception.UnauthorizedException
 import cn.com.guardiantech.checkin.server.service.AuthenticationService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
