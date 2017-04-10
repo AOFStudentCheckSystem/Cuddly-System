@@ -16,6 +16,7 @@ import java.util.*
  * Project backend
  */
 @RestController()
+@CrossOrigin
 @RequestMapping(path = arrayOf("/event"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class EventController {
 

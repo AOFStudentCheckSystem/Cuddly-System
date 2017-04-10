@@ -18,6 +18,7 @@ import java.util.*
  * Project backend
  */
 @RestController
+@CrossOrigin
 @RequestMapping(path = arrayOf("/signup"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class SignupController {
     @Autowired
