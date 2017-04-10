@@ -31,9 +31,6 @@ class AuthController {
     @Autowired
     lateinit var userTokenRepository: UserTokenRepository
 
-    @RequestMapping(path = arrayOf("/**"), method = arrayOf(RequestMethod.OPTIONS))
-    fun cors(){}
-
     @RequestMapping(path = arrayOf("/logout"))
     fun revokeToken(@AuthenticationPrincipal p: Token) {
         userTokenRepository.deleteByTokenSecretIgnoreCase(p.tokenSecret)

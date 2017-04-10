@@ -20,6 +20,6 @@ class WebMVCConfig : WebMvcConfigurerAdapter(){
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "PUT","DELETE","POST","OPTIONS")
-                .allowedHeaders("Authorization")
+                .allowedHeaders("Authorization", "Content-Type")
     }
 }
