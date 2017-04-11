@@ -5,7 +5,7 @@ import cn.com.guardiantech.checkin.server.exception.UnauthorizedException
 import cn.com.guardiantech.checkin.server.repository.UserTokenRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.NoSuchElementException
+import java.util.*
 
 /**
  * Created by Codetector on 2017/4/6.
@@ -19,7 +19,10 @@ class AuthenticationService {
     fun validateToken(secret: String): UserToken {
         userTokenRepository.removeExpiredTokens()
         try {
-            return userTokenRepository.findByTokenSecretIgnoreCase(secret).get()
+            val token = userTokenRepository.findByTokenSecretIgnoreCase(secret).get()
+            token.lastActive = Date()
+            userTokenRepository.save(token)
+            return token
         } catch (e: NoSuchElementException) {
             throw UnauthorizedException()
         }
