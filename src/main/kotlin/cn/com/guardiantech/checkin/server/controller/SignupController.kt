@@ -108,6 +108,19 @@ class SignupController {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(-1)), HttpStatus.OK)
     }
 
+    @RequestMapping(path = arrayOf("/edit/{id}/{targetStatus}"), method = arrayOf(RequestMethod.PATCH))
+    fun changeStatus(@PathVariable("id") id: Long,
+                     @PathVariable("targetStatus") status: Int): ResponseEntity<String> {
+        val sheet = sheetRepository.findById(id).get()
+        if (status >= -1 && status <= 1) {
+            sheet.status = status
+            sheetRepository.save(sheet)
+            return ActionResult(true).encode()
+        } else {
+            return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
+        }
+    }
+
     fun listSheetsWithStatus(status: Int = 1): List<SignUpSheet> {
         return sheetRepository.findByStatus(status)
     }
