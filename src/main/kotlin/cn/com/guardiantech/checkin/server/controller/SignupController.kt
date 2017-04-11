@@ -3,6 +3,7 @@ package cn.com.guardiantech.checkin.server.controller
 import cn.codetector.jet.jetsimplejson.JSONArray
 import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.com.guardiantech.checkin.server.authentication.Token
+import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import cn.com.guardiantech.checkin.server.entity.ActivityEventRecord
 import cn.com.guardiantech.checkin.server.entity.EventGroup
 import cn.com.guardiantech.checkin.server.entity.SignUpSheet
@@ -11,6 +12,7 @@ import cn.com.guardiantech.checkin.server.repository.EventGroupRepository
 import cn.com.guardiantech.checkin.server.repository.EventRecordRepository
 import cn.com.guardiantech.checkin.server.repository.EventRepository
 import cn.com.guardiantech.checkin.server.repository.SignUpSheetRepository
+import com.sun.deploy.net.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -170,5 +172,25 @@ class SignupController {
             }
         }
         return ActionResult(true).encode()
+    }
+
+    @RequestMapping(path = arrayOf("/signup/{sheetId}"), method = arrayOf(RequestMethod.GET))
+    fun showSignup(@AuthenticationPrincipal auth: Token,
+                   @PathVariable sheetId: Long): ResponseEntity<String> {
+        if (auth.student() == null) {
+            return ActionResult(false, HttpStatus.I_AM_A_TEAPOT).encode()
+        }
+        val student = auth.student()!!
+        val sheet = sheetRepository.findById(sheetId).get()
+        val response = JSONObject().put("sheetId", sheet.id.toString())
+        val sheetContent = JSONObject()
+        sheet.events.forEach { group ->
+            val event = group.events.firstOrNull { event ->
+                val fetch = eventRecordRepository.findByEventAndStudent(event, student = student)
+                fetch.isPresent && fetch.get().signupTime != -1L
+            }
+            sheetContent.put(group.id.toString(), event?.eventId ?: "-1")
+        }
+        return ResponseEntity(response.put("sheet", sheetContent).encode(), HttpStatus.OK)
     }
 }
