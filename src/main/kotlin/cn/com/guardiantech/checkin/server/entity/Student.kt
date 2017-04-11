@@ -11,7 +11,7 @@ import javax.persistence.Id
  * Project backend
  */
 @Entity
-class Student {
+class Student() {
     @Id
     @JsonIgnore
     @GeneratedValue
@@ -31,6 +31,13 @@ class Student {
 
     @Column(unique = true, length = 64)
     lateinit var cardSecret: String
+
+    constructor(idNumber: String, lastName: String, firstName: String, preferredName: String): this() {
+        this.idNumber = idNumber
+        this.lastName = lastName
+        this.firstName = firstName
+        this.preferredName = preferredName
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
