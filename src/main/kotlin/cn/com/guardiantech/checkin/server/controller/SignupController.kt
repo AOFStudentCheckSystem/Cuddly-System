@@ -39,14 +39,14 @@ class SignupController {
             sheet.events.addAll(eventGroupList)
             sheetRepository.save(sheet)
             return ActionResult(true).encode()
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             return ActionResult(e).encode()
         }
     }
 
     @RequestMapping(path = arrayOf("/edit/{id}/add"), method = arrayOf(RequestMethod.POST))
     fun addGroupToSheet(@RequestParam("group") group: Long,
-                        @PathVariable("id") sheetId:Long): ResponseEntity<String> {
+                        @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
         val sht = sheetRepository.findById(sheetId).get()
         sht.events.add(grp)
@@ -56,7 +56,7 @@ class SignupController {
 
     @RequestMapping(path = arrayOf("/edit/{id}/remove"), method = arrayOf(RequestMethod.POST))
     fun removeGroupFromSheet(@RequestParam("group") group: Long,
-                             @PathVariable("id") sheetId:Long): ResponseEntity<String> {
+                             @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
         val sht = sheetRepository.findById(sheetId).get()
         val result = sht.events.remove(grp)
@@ -66,7 +66,7 @@ class SignupController {
 
     @RequestMapping(path = arrayOf("/edit/{id}/set"), method = arrayOf(RequestMethod.POST))
     fun setGroupToSheet(@RequestParam("group") groups: String,
-                        @PathVariable("id") sheetId:Long): ResponseEntity<String> {
+                        @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         try {
             val jsonArrayGroup = JSONArray(groups)
             val eventGroupList: MutableList<EventGroup> = arrayListOf()
@@ -78,27 +78,32 @@ class SignupController {
             sheet.events.addAll(eventGroupList)
             sheetRepository.save(sheet)
             return ActionResult(true).encode()
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             return ActionResult(e).encode()
         }
     }
 
-    @GetMapping(path = arrayOf("/list"))
+    @RequestMapping(path = arrayOf("/{id}"), method = arrayOf(RequestMethod.GET))
+    fun findById(@PathVariable id:Long): SignUpSheet {
+        return sheetRepository.findById(id).get()
+    }
+
+    @RequestMapping(path = arrayOf("/list"), method = arrayOf(RequestMethod.GET))
     fun listAll(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", sheetRepository.findAll()), HttpStatus.OK)
     }
 
-    @GetMapping(path = arrayOf("/list/current"))
+    @RequestMapping(path = arrayOf("/list/current"), method = arrayOf(RequestMethod.GET))
     fun listOpenSheet(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(1)), HttpStatus.OK)
     }
 
-    @GetMapping(path = arrayOf("/list/future"))
+    @RequestMapping(path = arrayOf("/list/future"), method = arrayOf(RequestMethod.GET))
     fun listFuture(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(0)), HttpStatus.OK)
     }
 
-    @GetMapping(path = arrayOf("/list/past"))
+    @RequestMapping(path = arrayOf("/list/past"), method = arrayOf(RequestMethod.GET))
     fun listPast(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
         return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(-1)), HttpStatus.OK)
     }
