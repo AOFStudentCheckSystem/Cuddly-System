@@ -1,6 +1,8 @@
 package cn.com.guardiantech.checkin.server.controller
 
 import cn.codetector.jet.jetsimplejson.JSONArray
+import cn.codetector.jet.jetsimplejson.JSONObject
+import cn.com.guardiantech.checkin.server.authentication.Token
 import cn.com.guardiantech.checkin.server.entity.EventGroup
 import cn.com.guardiantech.checkin.server.entity.SignUpSheet
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -123,5 +126,11 @@ class SignupController {
 
     fun listSheetsWithStatus(status: Int = 1): List<SignUpSheet> {
         return sheetRepository.findByStatus(status)
+    }
+
+    @RequestMapping(path = arrayOf("/signup"), method = arrayOf(RequestMethod.POST))
+    fun submitSignup(@AuthenticationPrincipal auth: Token,
+                     @RequestParam("data") data: String) {
+        val obj = JSONObject(data)
     }
 }

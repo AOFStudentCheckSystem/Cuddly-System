@@ -48,7 +48,8 @@ class EventController {
 
     @RequestMapping(path = arrayOf("/list"))
     fun listAllEvents(pageable: Pageable): Page<ActivityEvent> {
-        return eventRepo.findAll(PageRequest(pageable.pageNumber, pageable.pageSize, Sort(Sort.Direction.ASC, "eventTime")))
+//        return eventRepo.findAll(PageRequest(pageable.pageNumber, pageable.pageSize, Sort(Sort.Direction.ASC, "eventTime")))
+        return eventRepo.findAll(pageable)
     }
 
 
