@@ -3,10 +3,13 @@ package cn.com.guardiantech.checkin.server.controller
 import cn.codetector.jet.jetsimplejson.JSONArray
 import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.com.guardiantech.checkin.server.authentication.Token
+import cn.com.guardiantech.checkin.server.entity.ActivityEventRecord
 import cn.com.guardiantech.checkin.server.entity.EventGroup
 import cn.com.guardiantech.checkin.server.entity.SignUpSheet
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EventGroupRepository
+import cn.com.guardiantech.checkin.server.repository.EventRecordRepository
+import cn.com.guardiantech.checkin.server.repository.EventRepository
 import cn.com.guardiantech.checkin.server.repository.SignUpSheetRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -25,6 +28,12 @@ import java.util.*
 class SignupController {
     @Autowired
     lateinit var sheetRepository: SignUpSheetRepository
+
+    @Autowired
+    lateinit var eventRepository: EventRepository
+
+    @Autowired
+    lateinit var eventRecordRepository: EventRecordRepository
 
     @Autowired
     lateinit var groupRepository: EventGroupRepository
@@ -87,7 +96,7 @@ class SignupController {
     }
 
     @RequestMapping(path = arrayOf("/{id}"), method = arrayOf(RequestMethod.GET))
-    fun findById(@PathVariable id:Long): SignUpSheet {
+    fun findById(@PathVariable id: Long): SignUpSheet {
         return sheetRepository.findById(id).get()
     }
 
@@ -130,7 +139,36 @@ class SignupController {
 
     @RequestMapping(path = arrayOf("/signup"), method = arrayOf(RequestMethod.POST))
     fun submitSignup(@AuthenticationPrincipal auth: Token,
-                     @RequestParam("data") data: String) {
+                     @RequestParam("data") data: String): ResponseEntity<String> {
+        // Parse Json
+        if (auth.student() == null) {
+            return ActionResult(false, HttpStatus.I_AM_A_TEAPOT).encode()
+        }
+        val student = auth.student()!!
         val obj = JSONObject(data)
+        val submitedSheet = obj.getJSONObject("sheet")
+        // Check against the declared SignUpSheet, see if there is any missing field
+        val sheet = sheetRepository.findById(obj.getLong("id")).get()
+        if (sheet.events.all { submitedSheet.containsKey(it.id.toString()) }) {
+            return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
+        }
+        sheet.events.forEach { group ->
+            val selectedOption = submitedSheet.getString(group.id.toString())
+            val selectedEvent = eventRepository.findByEventId(eventID = selectedOption).get()
+            if (group.events.contains(selectedEvent)) {
+                val recordO = eventRecordRepository.findByEventAndStudent(selectedEvent, student)
+                val eventRecord: ActivityEventRecord
+                if (recordO.isPresent) {
+                    eventRecord = recordO.get()
+                } else {
+                    eventRecord = ActivityEventRecord()
+                    eventRecord.event = selectedEvent
+                    eventRecord.student = student
+                }
+                eventRecord.signupTime = System.currentTimeMillis()
+                eventRecordRepository.save(eventRecord)
+            }
+        }
+        return ActionResult(true).encode()
     }
 }

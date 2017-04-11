@@ -15,14 +15,10 @@ import javax.persistence.*
  * Project backend
  */
 @Entity
-@Table(name = "user_tokens")
-class UserToken() : Token {
-    override fun student(): Student? {
-        return this.user.student
-    }
-
-    constructor(user: User) : this() {
-        this.user = user
+@Table(name = "email_tokens")
+class EmailToken(): Token{
+    constructor(student: Student) : this() {
+        this.student = student
         this.tokenSecret = UUID.randomUUID().toString()
     }
 
@@ -33,12 +29,17 @@ class UserToken() : Token {
 
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    lateinit var user: User
+    lateinit var student: Student
 
     @JsonIgnore
-    var lastActive: Date = Date()
+    var creationDate: Date = Date()
 
     override fun isAuthenticated(permission: Permission): Boolean {
-        return user.userLevel >= permission.permissionLevel
+        return Permission.SIGNUP.permissionLevel >= permission.permissionLevel
     }
+
+    override fun student(): Student? {
+        return student
+    }
+
 }
