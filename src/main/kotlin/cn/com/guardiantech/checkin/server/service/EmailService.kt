@@ -24,6 +24,9 @@ class EmailService {
 
     fun sendMail(templateName: String, values: HashMap<String, String>, vararg recipients: String) {
         val template = MailTemplateFactory.createTemlateByFileName(if (templateName.endsWith(".template",true)) templateName else templateName + ".template")
+        values.forEach {
+            template.setStringValue(it.key, it.value)
+        }
         val msg = mailSender.createMimeMessage()
         msg.setFrom(from)
         msg.subject = "AOF Check In Test Mail"
