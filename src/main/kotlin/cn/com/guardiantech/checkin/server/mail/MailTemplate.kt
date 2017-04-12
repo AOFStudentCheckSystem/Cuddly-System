@@ -2,9 +2,9 @@ package cn.com.guardiantech.checkin.server.mail
 
 import java.util.*
 
-class MailTemplate constructor(val templateContent: String) {
+class MailTemplate constructor(var templateContent: String) {
     fun setStringValue(templateKey: String, value: Any) {
-        this.templateContent.replace("{{" + templateKey + "}}", value.toString());
+        templateContent = this.templateContent.replace("{{" + templateKey + "}}", value.toString());
     }
 
     fun setListValue(templateKey: String, value: List<Any>) {
