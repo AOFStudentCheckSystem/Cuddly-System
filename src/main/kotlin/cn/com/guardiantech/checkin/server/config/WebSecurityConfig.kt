@@ -1,6 +1,7 @@
 package cn.com.guardiantech.checkin.server.config
 
 import cn.com.guardiantech.checkin.server.authentication.AuthenticationFilter
+import cn.com.guardiantech.checkin.server.authentication.Permission
 import cn.com.guardiantech.checkin.server.service.AuthenticationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -35,5 +36,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
         http.csrf().disable()
         http.antMatcher("/**")
                 .addFilterBefore(AuthenticationFilter(authenticationService), BasicAuthenticationFilter::class.java)
+        http.authorizeRequests().antMatchers("/student/**").hasAuthority(Permission.ADMIN.authority)
     }
 }
