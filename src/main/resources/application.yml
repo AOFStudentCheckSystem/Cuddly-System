@@ -15,6 +15,7 @@ spring:
     hibernate:
       ddl-auto: update
   mail:
+    from: "AOF Activity Sign-up<signups@233.com.hk>"
     host: hn2.guardiantech.com.cn
     protocol: smtps
     port: 587
@@ -22,8 +23,5 @@ spring:
     password: ${smtppass}
     properties:
       mail.smtp.auth: true
-      mail.smtp.starttls.enable: false
-      mail.smtp.starttls.required: false
       mail.smtp.ssl.enable: true
       mail.transport.protocol: smtps
-      mail.smtp.from: ${smtpusr:signups@233.com.hk}
