@@ -151,7 +151,7 @@ class SignupController {
         val submitedSheet = obj.getJSONObject("sheet")
         // Check against the declared SignUpSheet, see if there is any missing field
         val sheet = sheetRepository.findById(obj.getLong("id")).get()
-        if (sheet.events.all { submitedSheet.containsKey(it.id.toString()) }) {
+        if (!sheet.events.all { submitedSheet.containsKey(it.id.toString()) }) {
             return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
         }
         sheet.events.forEach { group ->
