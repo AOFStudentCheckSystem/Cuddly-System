@@ -29,8 +29,8 @@ class Student() {
     @Column(length = 64)
     lateinit var preferredName: String
 
-    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(64) default ''")
-    lateinit var cardSecret: String
+    @Column(unique = true, length = 64)
+    var cardSecret: String? = null
 
     constructor(idNumber: String, lastName: String, firstName: String, preferredName: String): this() {
         this.idNumber = idNumber
