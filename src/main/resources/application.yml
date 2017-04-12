@@ -1,3 +1,5 @@
+gcheck:
+  defaultEmailDomain: "@avonoldfarms.com"
 server:
   port: 10493
 spring:
@@ -12,3 +14,16 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  mail:
+    host: hn2.guardiantech.com.cn
+    protocol: smtps
+    port: 587
+    username: ${smtpusr:signups@233.com.hk}
+    password: ${smtppass}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: false
+      mail.smtp.starttls.required: false
+      mail.smtp.ssl.enable: true
+      mail.transport.protocol: smtps
+      mail.smtp.from: ${smtpusr:signups@233.com.hk}

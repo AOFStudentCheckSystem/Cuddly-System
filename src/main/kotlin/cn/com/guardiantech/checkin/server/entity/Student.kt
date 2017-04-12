@@ -30,6 +30,9 @@ class Student() {
     lateinit var preferredName: String
 
     @Column(unique = true, length = 64)
+    var email: String? = null
+
+    @Column(unique = true, length = 64)
     var cardSecret: String? = null
 
     constructor(idNumber: String, lastName: String, firstName: String, preferredName: String): this() {
@@ -37,6 +40,10 @@ class Student() {
         this.lastName = lastName
         this.firstName = firstName
         this.preferredName = preferredName
+    }
+
+    constructor(idNumber: String, lastName: String, firstName: String, preferredName: String, email: String): this(idNumber, lastName, firstName, preferredName) {
+        this.email = email.toLowerCase()
     }
 
     override fun equals(other: Any?): Boolean {
