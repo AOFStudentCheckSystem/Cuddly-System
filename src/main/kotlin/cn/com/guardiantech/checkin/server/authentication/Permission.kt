@@ -12,5 +12,5 @@ enum class Permission(val permissionLevel: Int, val stringValue: String): Grante
     TABLET(900, "Tablet"),
     ADMIN(1000, "Admin");
 
-    override fun getAuthority(): String = stringValue
+    override fun getAuthority(): String = "ROLE_" + stringValue
 }

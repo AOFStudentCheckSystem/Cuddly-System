@@ -3,13 +3,18 @@ package cn.com.guardiantech.checkin.server.config
 import cn.com.guardiantech.checkin.server.authentication.AuthenticationFilter
 import cn.com.guardiantech.checkin.server.authentication.Permission
 import cn.com.guardiantech.checkin.server.service.AuthenticationService
+import cn.com.guardiantech.checkin.server.service.UserAuthenticationDetailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+
+
 
 /**
  * Created by Codetector on 2017/4/5.
@@ -17,6 +22,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  */
 @Configuration
 class WebSecurityConfig : WebSecurityConfigurerAdapter(){
+
+    @Autowired
+    lateinit var authenticationDetail : UserAuthenticationDetailService
 
     @Autowired
     lateinit var authenticationService: AuthenticationService
@@ -36,6 +44,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
         http.csrf().disable()
         http.antMatcher("/**")
                 .addFilterBefore(AuthenticationFilter(authenticationService), BasicAuthenticationFilter::class.java)
-        http.authorizeRequests().antMatchers("/student/**").hasAuthority(Permission.ADMIN.authority)
+        http.authorizeRequests()
+                .antMatchers("/student/**").hasRole(Permission.ADMIN.stringValue)
     }
+//
+//    override fun configure(auth: AuthenticationManagerBuilder) {
+//        auth.userDetailsService(authenticationDetail)
+//    }
 }

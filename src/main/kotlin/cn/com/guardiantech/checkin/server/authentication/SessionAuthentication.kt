@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority
  * All rights reserved.
  */
 class SessionAuthentication(private val token: Token) : Authentication {
-    private var authenticated = false
+    private var authenticated = true
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return Permission.values().filter {
