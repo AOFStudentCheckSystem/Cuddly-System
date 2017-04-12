@@ -42,6 +42,7 @@ class StudentController {
                  @PathVariable("studentId") studentID: String): ResponseEntity<String> {
         if (token is UserToken) {
             token.user.student = studentRepository.findByIdNumberIgnoreCase(idNumber = studentID).get()
+            userRepositopry.save(token.user)
         } else {
             return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
         }
