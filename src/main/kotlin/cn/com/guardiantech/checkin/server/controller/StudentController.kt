@@ -63,7 +63,7 @@ class StudentController {
 
     @RequestMapping(path = arrayOf("/templink/sendmail"))
     fun tempEmail(@RequestParam("destAddr") addr: String): ResponseEntity<String> {
-        emailService.sendMail("tokenNotification", hashMapOf(Pair("url","http://www.google.com")), addr)
+        emailService.sendMail("tokenNotification", hashMapOf(Pair("link","http://www.google.com")), addr)
         return ActionResult(true).encode()
     }
 }
