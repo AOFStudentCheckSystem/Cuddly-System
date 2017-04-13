@@ -7,6 +7,9 @@ import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EventGroupRepository
 import cn.com.guardiantech.checkin.server.repository.EventRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -76,8 +79,8 @@ class EventGroupController {
     }
 
     @RequestMapping(path = arrayOf("/list"))
-    fun listAllEvents(): ResponseEntity<MutableMap<String, MutableList<EventGroup>>> {
-        return ResponseEntity(Collections.singletonMap("eventGroups", eventGroupRepo.findAll()), HttpStatus.OK)
-    }
+    fun listEventGroupss(pageable: Pageable): Page<EventGroup> = eventGroupRepo.findAllByOrderByIdDesc(pageable)
 
+    @GetMapping(path = arrayOf("/listall"))
+    fun listAllEventGroups() = listEventGroupss(PageRequest(0, Int.MAX_VALUE))
 }
