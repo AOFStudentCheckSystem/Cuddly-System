@@ -10,6 +10,7 @@ import cn.com.guardiantech.checkin.server.repository.UserRepository
 import cn.com.guardiantech.checkin.server.repository.UserTokenRepository
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -67,6 +68,7 @@ class AuthController {
     @RequestMapping(path = arrayOf("/verify"))
     fun verifyToken(@AuthenticationPrincipal token: Token) = token
 
+    @CacheEvict(cacheNames = arrayOf("user_tokens"))
     @RequestMapping(path = arrayOf("/admin/setLevel"), method = arrayOf(RequestMethod.POST))
     fun setUserLevel(@RequestParam("targetUser") targetUser: String,
                      @RequestParam("targetLevel") level: Int) {

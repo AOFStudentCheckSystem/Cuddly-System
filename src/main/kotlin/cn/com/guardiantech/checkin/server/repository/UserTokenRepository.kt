@@ -13,7 +13,7 @@ import java.util.*
  * Project backend
  */
 interface UserTokenRepository : CrudRepository<UserToken, String>{
-    @Cacheable("user_login_tokens")
+    @Cacheable("user_tokens")
     fun findByTokenSecretIgnoreCase(secret: String): Optional<UserToken>
 
     @Query("delete from user_tokens where last_active < DATE_SUB(NOW(), INTERVAL ?1 DAY)", nativeQuery = true)
