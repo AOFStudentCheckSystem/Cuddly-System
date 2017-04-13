@@ -59,7 +59,8 @@ class EventController {
     fun editEvent(@RequestParam("eventId") eventID: String,
                   @RequestParam("newTime", required = false, defaultValue = "0") newTime: Long,
                   @RequestParam("newName", required = false, defaultValue = "") newName: String,
-                  @RequestParam("newDescription", required = false, defaultValue = "") newDescription: String): ResponseEntity<String> {
+                  @RequestParam("newDescription", required = false, defaultValue = "") newDescription: String,
+                  @RequestParam("newStatus", required = false, defaultValue = "") eventStatus: String): ResponseEntity<String> {
         val eventToEdit = eventRepo.findByEventId(eventID).get()
         if (newTime != 0L) {
             eventToEdit.eventTime = Date(newTime)
@@ -69,6 +70,9 @@ class EventController {
         }
         if (newDescription.isNotEmpty()) {
             eventToEdit.eventDescription = newDescription
+        }
+        if (eventStatus.isNotEmpty()) {
+            eventToEdit.eventStatus = eventStatus.toInt()
         }
         eventRepo.save(eventToEdit)
         return ActionResult(true).encode()
