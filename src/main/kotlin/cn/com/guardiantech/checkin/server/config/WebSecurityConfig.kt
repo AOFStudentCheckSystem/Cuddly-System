@@ -37,6 +37,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/auth/register")
                 //Event
                 .antMatchers("/event/list")
+                .antMatchers("/event/listall")
                 .antMatchers("/event/group/list")
                 //Signup
     }
