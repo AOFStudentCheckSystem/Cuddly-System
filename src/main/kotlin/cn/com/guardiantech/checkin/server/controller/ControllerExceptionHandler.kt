@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.util.NoSuchElementException
 
 
 /**
@@ -16,12 +17,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class ControllerExceptionHandler {
-    @ExceptionHandler(Throwable::class)
-    fun rootHandler(t: Throwable): ResponseEntity<Throwable> = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(t)
-
     @ExceptionHandler(UnauthorizedException::class)
     fun unAuthorizedExceptionHandler() = ResponseEntity(JSONObject().put("error", "unauthorized").encode(), HttpStatus.UNAUTHORIZED)
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun missingParamException(e: MissingServletRequestParameterException) = ResponseEntity(JSONObject().put("error", "missingParam").put("name", e.parameterName).put("type", e.parameterType).encode(), HttpStatus.NOT_ACCEPTABLE)
+
+    @ExceptionHandler(NoSuchElementException::class)
+    fun elementNotFound(e: NoSuchElementException): ResponseEntity<String> = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+
+    @ExceptionHandler(Throwable::class)
+    fun rootHandler(t: Throwable): ResponseEntity<String> = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(t.message)
 }

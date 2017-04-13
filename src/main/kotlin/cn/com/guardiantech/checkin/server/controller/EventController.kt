@@ -55,5 +55,22 @@ class EventController {
     @GetMapping(path = arrayOf("/listall"))
     fun listAllEventsNoPage(): Page<ActivityEvent> = listAllEvents(PageRequest(0, Int.MAX_VALUE))
 
-
+    @RequestMapping(path = arrayOf("/edit"), method = arrayOf(RequestMethod.POST))
+    fun editEvent(@RequestParam("eventId") eventID: String,
+                  @RequestParam("newTime", required = false, defaultValue = "0") newTime: Long,
+                  @RequestParam("newName", required = false, defaultValue = "") newName: String,
+                  @RequestParam("newDescription", required = false, defaultValue = "") newDescription: String): ResponseEntity<String> {
+        val eventToEdit = eventRepo.findByEventId(eventID).get()
+        if (newTime != 0L) {
+            eventToEdit.eventTime = Date(newTime)
+        }
+        if (newName.isNotEmpty()) {
+            eventToEdit.eventName = newName
+        }
+        if (newDescription.isNotEmpty()) {
+            eventToEdit.eventDescription = newDescription
+        }
+        eventRepo.save(eventToEdit)
+        return ActionResult(true).encode()
+    }
 }
