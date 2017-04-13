@@ -36,7 +36,7 @@ class EventController {
         val eventDate: Date = if (time == 0L) {
             Date()
         } else {
-            Date(time * 1000)
+            Date(time)
         }
         try {
             eventRepo.save(ActivityEvent(name, eventDate, description))
