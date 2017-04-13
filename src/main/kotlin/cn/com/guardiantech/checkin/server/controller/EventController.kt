@@ -52,5 +52,8 @@ class EventController {
         return eventRepo.findAll(pageable)
     }
 
+    @RequestMapping(path = arrayOf("/listall"))
+    fun listAllEventsNoPage(): Page<ActivityEvent> = listAllEvents(PageRequest(0, Int.MAX_VALUE))
+
 
 }
