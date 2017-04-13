@@ -66,4 +66,12 @@ class AuthController {
 
     @RequestMapping(path = arrayOf("/verify"))
     fun verifyToken(@AuthenticationPrincipal token: Token) = token
+
+    @RequestMapping(path = arrayOf("/admin/setLevel"), method = arrayOf(RequestMethod.POST))
+    fun setUserLevel(@RequestParam("targetUser") targetUser: String,
+                     @RequestParam("targetLevel") level: Int) {
+        val user = userRepository.findByEmailIgnoreCase(targetUser).get()
+        user.userLevel = level
+        userRepository.save(user)
+    }
 }

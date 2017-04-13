@@ -46,10 +46,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
         http.antMatcher("/**")
                 .addFilterBefore(AuthenticationFilter(authenticationService), BasicAuthenticationFilter::class.java)
         http.authorizeRequests()
+                //Auth
+                .antMatchers("/auth/admin/**").hasRole(Permission.ADMIN.stringValue)
+                // Events
                 .antMatchers("/event/create").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/remove/**").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/new").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/edit/**").hasRole(Permission.TABLET.stringValue)
+                // Sign ups
                 .antMatchers("/signup/create").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/signup/edit/**").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/signup/find/*").hasRole(Permission.SIGNUP.stringValue)
@@ -57,11 +61,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/signup/list/**").hasRole(Permission.SIGNUP.stringValue)
                 .antMatchers("/signup/signup").hasRole(Permission.SIGNUP.stringValue)
                 .antMatchers("/signup/signup/*").hasRole(Permission.SIGNUP.stringValue)
+                // Student
                 .antMatchers("/student/create").hasRole(Permission.ADMIN.stringValue)
                 .antMatchers("/student/new").hasRole(Permission.ADMIN.stringValue)
     }
-//
-//    override fun configure(auth: AuthenticationManagerBuilder) {
-//        auth.userDetailsService(authenticationDetail)
-//    }
 }
