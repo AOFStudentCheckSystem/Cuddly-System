@@ -97,7 +97,7 @@ class SignupController {
         }
     }
 
-    @RequestMapping(path = arrayOf("/{id}"), method = arrayOf(RequestMethod.GET))
+    @RequestMapping(path = arrayOf("/find/{id}"), method = arrayOf(RequestMethod.GET))
     fun findById(@PathVariable id: Long): SignUpSheet {
         return sheetRepository.findById(id).get()
     }
