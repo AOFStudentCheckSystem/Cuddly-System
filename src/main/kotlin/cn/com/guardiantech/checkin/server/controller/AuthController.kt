@@ -68,7 +68,7 @@ class AuthController {
     @RequestMapping(path = arrayOf("/verify"))
     fun verifyToken(@AuthenticationPrincipal token: Token) = token
 
-    @CacheEvict(cacheNames = arrayOf("user_tokens"))
+    @CacheEvict(cacheNames = arrayOf("user_tokens"), allEntries = true)
     @RequestMapping(path = arrayOf("/admin/setLevel"), method = arrayOf(RequestMethod.POST))
     fun setUserLevel(@RequestParam("targetUser") targetUser: String,
                      @RequestParam("targetLevel") level: Int) {
