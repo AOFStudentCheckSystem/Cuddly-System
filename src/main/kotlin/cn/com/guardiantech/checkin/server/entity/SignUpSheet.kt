@@ -1,5 +1,7 @@
 package cn.com.guardiantech.checkin.server.entity
 
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import org.jsondoc.core.annotation.ApiObjectField
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -26,5 +28,6 @@ class SignUpSheet() {
     lateinit var name: String
 
     @ManyToMany
+    @OnDelete(action = OnDeleteAction.CASCADE)
     var events:MutableSet<EventGroup> = hashSetOf()
 }

@@ -29,6 +29,7 @@ class ActivityEvent() {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     var id: Int = 0
 
     @Column(unique = true)
