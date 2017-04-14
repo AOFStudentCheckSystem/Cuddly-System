@@ -69,5 +69,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 // Student
                 .antMatchers("/student/create").hasRole(Permission.ADMIN.stringValue)
                 .antMatchers("/student/new").hasRole(Permission.ADMIN.stringValue)
+                .anyRequest().hasRole(Permission.ADMIN.stringValue)
     }
 }

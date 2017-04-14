@@ -78,6 +78,11 @@ class EventGroupController {
         return ActionResult(success = true).encode()
     }
 
+    @RequestMapping(path = arrayOf("/remove/{id}"), method = arrayOf(RequestMethod.DELETE))
+    fun removeEventGroupById(@PathVariable id:Long): ResponseEntity<String> {
+        return ActionResult(eventGroupRepo.removeById(id) > 0).encode()
+    }
+
     @RequestMapping(path = arrayOf("/list"))
     fun listEventGroupss(pageable: Pageable): Page<EventGroup> = eventGroupRepo.findAllByOrderByIdDesc(pageable)
 
