@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -53,13 +54,13 @@ class EventController {
     }
 
     @RequestMapping(path = arrayOf("/list/pending", "/list/future"), method = arrayOf(RequestMethod.GET))
-    fun listFutureEvents() = eventRepo.findByEventStatus(0)
+    fun listFutureEvents() = ResponseEntity<Map<String, Set<ActivityEvent>>>(Collections.singletonMap("events", eventRepo.findByEventStatus(0)), HttpStatus.OK)
 
     @RequestMapping(path = arrayOf("/list/current", "/list/boarding"), method = arrayOf(RequestMethod.GET))
-    fun listCurrentEvents() = eventRepo.findByEventStatus(1)
+    fun listCurrentEvents() = ResponseEntity<Map<String, Set<ActivityEvent>>>(Collections.singletonMap("events", eventRepo.findByEventStatus(1)), HttpStatus.OK)
 
     @RequestMapping(path = arrayOf("/list/past", "/list/completed"), method = arrayOf(RequestMethod.GET))
-    fun listPastEvents() = eventRepo.findByEventStatus(2)
+    fun listPastEvents() = ResponseEntity<Map<String, Set<ActivityEvent>>>(Collections.singletonMap("events", eventRepo.findByEventStatus(2)), HttpStatus.OK)
 
     @RequestMapping(path = arrayOf("/list/{id}"), method = arrayOf(RequestMethod.GET))
     fun getEventById(@PathVariable id: String): ActivityEvent {

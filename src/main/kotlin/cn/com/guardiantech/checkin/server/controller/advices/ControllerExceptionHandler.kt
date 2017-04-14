@@ -1,4 +1,4 @@
-package cn.com.guardiantech.checkin.server.controller
+package cn.com.guardiantech.checkin.server.controller.advices
 
 import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.codetector.jet.jetsimplejson.exception.DecodeException
