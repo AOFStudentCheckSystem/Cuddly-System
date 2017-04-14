@@ -49,6 +49,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
         http.authorizeRequests()
                 //Auth
                 .antMatchers("/auth/admin/**").hasRole(Permission.ADMIN.stringValue)
+                //CheckIn
+                .antMatchers("/checkin/**").hasRole(Permission.TABLET.stringValue)
                 // Events
                 .antMatchers("/event/create").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/remove/**").hasRole(Permission.TABLET.stringValue)
