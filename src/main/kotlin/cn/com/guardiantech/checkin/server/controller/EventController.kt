@@ -52,6 +52,15 @@ class EventController {
         return eventRepo.findAll(pageable)
     }
 
+    @RequestMapping(path = arrayOf("/list/pending", "/list/future"))
+    fun listFutureEvents() = eventRepo.findByEventStatus(0)
+
+    @RequestMapping(path = arrayOf("/list/current", "/list/boarding"))
+    fun listCurrentEvents() = eventRepo.findByEventStatus(1)
+
+    @RequestMapping(path = arrayOf("/list/past", "/list/completed"))
+    fun listPastEvents() = eventRepo.findByEventStatus(2)
+
     @GetMapping(path = arrayOf("/listall"))
     fun listAllEventsNoPage(): Page<ActivityEvent> = listAllEvents(PageRequest(0, Int.MAX_VALUE))
 

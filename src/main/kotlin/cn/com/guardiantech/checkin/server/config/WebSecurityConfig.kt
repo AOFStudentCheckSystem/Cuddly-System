@@ -38,6 +38,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 //Event
                 .antMatchers("/event/list")
                 .antMatchers("/event/listall")
+                .antMatchers("/event/list/**")
                 .antMatchers("/event/group/list")
                 //Signup
     }
@@ -53,6 +54,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/checkin/**").hasRole(Permission.TABLET.stringValue)
                 // Events
                 .antMatchers("/event/create").hasRole(Permission.TABLET.stringValue)
+                .antMatchers("/event/records/list").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/remove/**").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/new").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/edit/**").hasRole(Permission.TABLET.stringValue)

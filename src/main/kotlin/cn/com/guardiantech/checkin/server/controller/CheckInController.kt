@@ -39,6 +39,16 @@ class CheckInController {
         //Parse Data
         val jsonData = JSONObject(data)
         val event = eventRepository.findByEventId(jsonData.getString("targetEvent")).get()
+
+        if (event.eventStatus > 1) {
+            throw IllegalArgumentException("Event has been completed. Invalid request.")
+        }
+
+        if (event.eventStatus < 1) {
+            event.eventStatus = 1
+            eventRepository.save(event)
+        }
+
         val records = jsonData.getJSONArray("recordsToUpload")
 
         var effectiveUpdate = 0

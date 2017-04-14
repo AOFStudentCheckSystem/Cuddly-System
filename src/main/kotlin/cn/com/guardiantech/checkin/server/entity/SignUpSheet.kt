@@ -3,10 +3,7 @@ package cn.com.guardiantech.checkin.server.entity
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import org.jsondoc.core.annotation.ApiObjectField
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToMany
+import javax.persistence.*
 
 /**
  * Created by Codetector on 2017/4/7.
@@ -27,6 +24,6 @@ class SignUpSheet() {
 
     lateinit var name: String
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     var events:MutableSet<EventGroup> = hashSetOf()
 }

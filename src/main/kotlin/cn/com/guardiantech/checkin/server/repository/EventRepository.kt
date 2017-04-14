@@ -20,4 +20,6 @@ interface EventRepository : PagingAndSortingRepository<ActivityEvent, Long>{
     fun removeByEventId(eventID: String): Long
 
     fun findByEventId(eventID: String): Optional<ActivityEvent>
+
+    fun findByEventStatus(status: Int): Set<ActivityEvent>
 }

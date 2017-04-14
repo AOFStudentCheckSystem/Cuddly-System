@@ -50,7 +50,7 @@ class ActivityEvent() {
     var records: MutableSet<ActivityEventRecord> = HashSet()
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.DETACH))
+    @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
     var eventGroups: Set<EventGroup>? = null
 
     override fun equals(other: Any?): Boolean {
