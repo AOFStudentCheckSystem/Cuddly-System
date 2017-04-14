@@ -40,6 +40,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/event/listall")
                 .antMatchers("/event/list/**")
                 .antMatchers("/event/group/list")
+                .antMatchers("/event/group/list/**")
                 //Signup
     }
 

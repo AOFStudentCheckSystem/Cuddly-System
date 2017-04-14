@@ -86,6 +86,11 @@ class EventGroupController {
     @RequestMapping(path = arrayOf("/list"))
     fun listEventGroupss(pageable: Pageable): Page<EventGroup> = eventGroupRepo.findAllByOrderByIdDesc(pageable)
 
+    @RequestMapping(path = arrayOf("/list/{id}"))
+    fun getEventGroupById(@PathVariable id: Long): EventGroup {
+        return eventGroupRepo.findById(id).get()
+    }
+
     @GetMapping(path = arrayOf("/listall"))
     fun listAllEventGroups() = listEventGroupss(PageRequest(0, Int.MAX_VALUE))
 }
