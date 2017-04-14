@@ -1,5 +1,7 @@
 package cn.com.guardiantech.checkin.server.entity
 
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
@@ -24,7 +26,7 @@ class EventGroup() {
 
     var name: String = ""
 
-    @ManyToMany(cascade = arrayOf(CascadeType.DETACH))
+    @ManyToMany(fetch = FetchType.LAZY)
     var events: MutableSet<ActivityEvent> = hashSetOf()
 
     override fun equals(other: Any?): Boolean {

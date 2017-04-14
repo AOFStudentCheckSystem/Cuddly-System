@@ -49,6 +49,10 @@ class ActivityEvent() {
     @Column(nullable = false)
     var records: MutableSet<ActivityEventRecord> = HashSet()
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.DETACH))
+    var eventGroups: Set<EventGroup>? = null
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
