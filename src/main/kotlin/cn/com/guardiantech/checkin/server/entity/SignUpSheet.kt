@@ -28,6 +28,5 @@ class SignUpSheet() {
     lateinit var name: String
 
     @ManyToMany
-    @OnDelete(action = OnDeleteAction.CASCADE)
     var events:MutableSet<EventGroup> = hashSetOf()
 }

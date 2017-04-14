@@ -2,10 +2,7 @@ package cn.com.guardiantech.checkin.server.entity
 
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToMany
+import javax.persistence.*
 
 /**
  * Created by Codetector on 2017/4/7.
@@ -27,8 +24,7 @@ class EventGroup() {
 
     var name: String = ""
 
-    @ManyToMany
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(cascade = arrayOf(CascadeType.DETACH))
     var events: MutableSet<ActivityEvent> = hashSetOf()
 
     override fun equals(other: Any?): Boolean {
