@@ -68,8 +68,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/signup/signup").hasRole(Permission.SIGNUP.stringValue)
                 .antMatchers("/signup/signup/*").hasRole(Permission.SIGNUP.stringValue)
                 // Student
+                .antMatchers("/student/list").hasRole(Permission.USER.stringValue)
+                .antMatchers("/student/listall").hasRole(Permission.USER.stringValue)
                 .antMatchers("/student/create").hasRole(Permission.ADMIN.stringValue)
                 .antMatchers("/student/new").hasRole(Permission.ADMIN.stringValue)
+                .antMatchers("/student/edit/**").hasRole(Permission.TABLET.stringValue)
                 .anyRequest().hasRole(Permission.ADMIN.stringValue)
     }
 }
