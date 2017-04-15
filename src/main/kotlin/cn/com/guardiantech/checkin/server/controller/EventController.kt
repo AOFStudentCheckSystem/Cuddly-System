@@ -70,6 +70,30 @@ class EventController {
     @GetMapping(path = arrayOf("/listall"))
     fun listAllEventsNoPage(): Page<ActivityEvent> = listAllEvents(PageRequest(0, Int.MAX_VALUE))
 
+    @RequestMapping(path = arrayOf("/credit"), method = arrayOf(RequestMethod.POST))
+    fun creditEvent(@RequestParam("eventId", required = false, defaultValue = "") eventID: String,
+                    @RequestParam("time", required = false, defaultValue = "0") newTime: Long,
+                    @RequestParam("name", required = true) newName: String,
+                    @RequestParam("description", required = false, defaultValue = "") newDescription: String): ResponseEntity<String> {
+        val targetEvent: ActivityEvent
+        if (eventID.isNotEmpty()) {
+            targetEvent = eventRepo.findByEventId(eventID).orElseGet { ActivityEvent(newName) }
+        } else {
+            targetEvent = ActivityEvent(newName)
+        }
+        if (newTime != 0L) {
+            targetEvent.eventTime = Date(newTime)
+        }
+        if (newName.isNotEmpty()) {
+            targetEvent.eventName = newName
+        }
+        if (newDescription.isNotEmpty()) {
+            targetEvent.eventDescription = newDescription
+        }
+        eventRepo.save(targetEvent)
+        return ActionResult(true).encode()
+    }
+
     @RequestMapping(path = arrayOf("/edit"), method = arrayOf(RequestMethod.POST))
     fun editEvent(@RequestParam("eventId") eventID: String,
                   @RequestParam("newTime", required = false, defaultValue = "0") newTime: Long,
