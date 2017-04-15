@@ -78,7 +78,7 @@ class EventGroupController {
         return ActionResult(success = true).encode()
     }
 
-    @RequestMapping(path = arrayOf("/edit/{groupId}"), method = arrayOf(RequestMethod.PUT))
+    @RequestMapping(path = arrayOf("/edit/{groupId}"), method = arrayOf(RequestMethod.POST))
     fun updateEventTitle(@RequestParam("newName") newName: String,
                          @PathVariable("groupId") groupId: Long): ResponseEntity<String> {
         val targetGroup = eventGroupRepo.findById(groupId).get()
