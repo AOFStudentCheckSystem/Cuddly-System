@@ -25,7 +25,7 @@ class EventController {
     @Autowired
     lateinit var eventRepo: EventRepository
 
-    @RequestMapping(path = arrayOf("/remove/{id}"))
+    @RequestMapping(path = arrayOf("/remove/{id}"), method = arrayOf(RequestMethod.DELETE))
     fun removeEvent(@PathVariable("id") eventID: String): ResponseEntity<String> {
         return ActionResult(eventRepo.removeByEventId(eventID) > 0).encode()
     }

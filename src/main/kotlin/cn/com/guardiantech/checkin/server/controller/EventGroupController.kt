@@ -78,6 +78,16 @@ class EventGroupController {
         return ActionResult(success = true).encode()
     }
 
+    @RequestMapping(path = arrayOf("/edit/{groupId}"), method = arrayOf(RequestMethod.PUT))
+    fun updateEventTitle(@RequestParam("newName") newName: String,
+                         @PathVariable("groupId") groupId: Long): ResponseEntity<String> {
+        val targetGroup = eventGroupRepo.findById(groupId).get()
+        targetGroup.name = newName
+        eventGroupRepo.save(targetGroup)
+        return ActionResult(success = true).encode()
+    }
+
+
     @RequestMapping(path = arrayOf("/remove/{id}"), method = arrayOf(RequestMethod.DELETE))
     fun removeEventGroupById(@PathVariable id:Long): ResponseEntity<String> {
         return ActionResult(eventGroupRepo.removeById(id) > 0).encode()
