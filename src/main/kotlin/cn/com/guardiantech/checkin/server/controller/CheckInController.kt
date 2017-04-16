@@ -77,6 +77,7 @@ class CheckInController {
     }
 
     @RequestMapping(path = arrayOf("/record/{eventId}"), method = arrayOf(RequestMethod.GET))
-    fun getRecordForEvent(@PathVariable("eventId") eventId: String): ResponseEntity<Map<String, List<ActivityEventRecord>>> = ResponseEntity(Collections.singletonMap("records", eventRecordRepository.findByEvent(eventRepository.findByEventId(eventId).get())), HttpStatus.OK)
+    fun getRecordForEvent(@PathVariable("eventId") eventId: String): ResponseEntity<Map<String, List<ActivityEventRecord>>> = 
+        ResponseEntity(Collections.singletonMap("records", eventRecordRepository.findByEvent(eventRepository.findByEventId(eventId).get())), HttpStatus.OK)
 
 }
