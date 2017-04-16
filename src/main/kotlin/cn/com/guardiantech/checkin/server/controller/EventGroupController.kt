@@ -103,4 +103,9 @@ class EventGroupController {
 
     @GetMapping(path = arrayOf("/listall"))
     fun listAllEventGroups() = listEventGroupss(PageRequest(0, Int.MAX_VALUE))
+
+    @GetMapping(path = arrayOf("/list-available"))
+    fun listAvailable() {
+
+    }
 }

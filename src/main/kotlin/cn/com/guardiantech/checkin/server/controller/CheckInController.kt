@@ -2,18 +2,18 @@ package cn.com.guardiantech.checkin.server.controller
 
 import abs
 import cn.codetector.jet.jetsimplejson.JSONObject
+import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import cn.com.guardiantech.checkin.server.entity.ActivityEventRecord
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EventRecordRepository
 import cn.com.guardiantech.checkin.server.repository.EventRepository
 import cn.com.guardiantech.checkin.server.repository.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import unitDirection
+import java.util.*
 
 /**
  * Created by Codetector on 2017/4/14.
@@ -75,5 +75,8 @@ class CheckInController {
         }
         return JSONObject().put("targetEvent", event.eventId).put("totalRecordsReceived", totalRecords).put("validRecords", validRecords).put("effectiveRecords", effectiveUpdate).encode()
     }
+
+    @RequestMapping(path = arrayOf("/record/{eventId}"), method = arrayOf(RequestMethod.GET))
+    fun getRecordForEvent(@PathVariable("eventId") eventId: String): ResponseEntity<Map<String, List<ActivityEventRecord>>> = ResponseEntity(Collections.singletonMap("records", eventRecordRepository.findByEvent(eventRepository.findByEventId(eventId).get())), HttpStatus.OK)
 
 }
