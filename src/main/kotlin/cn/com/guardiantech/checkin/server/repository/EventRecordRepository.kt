@@ -14,4 +14,6 @@ interface EventRecordRepository: CrudRepository<ActivityEventRecord, Long> {
     fun findByStudent(student: Student): List<ActivityEventRecord>
     fun findByEvent(event: ActivityEvent): List<ActivityEventRecord>
     fun findByEventAndStudent(event: ActivityEvent, student: Student): Optional<ActivityEventRecord>
+
+//    fun findGroupWithoutBinding()
 }
