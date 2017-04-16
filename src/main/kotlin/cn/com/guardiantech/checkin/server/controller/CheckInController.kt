@@ -58,7 +58,7 @@ class CheckInController {
             if (o is JSONObject) {
                 validRecords ++
                 val recordTimestamp = o.getLong("timestamp")
-                val recordNewStatus = o.getInteger("status")
+                val recordNewStatus = if (o.containsKey("status")) o.getInteger("status") else { 1 }
                 val targetStudent = studentRepository.findByIdNumberIgnoreCase(o.getString("studentId")).get()
                 val targetEventRecord = recordRepository.findByEventAndStudent(event, targetStudent).orElseGet {
                     val r = ActivityEventRecord()
@@ -66,7 +66,7 @@ class CheckInController {
                     r.student = targetStudent
                     r
                 }
-                if (targetEventRecord.checkInTime.abs() <= recordTimestamp) {
+                if (targetEventRecord.checkInTime.abs() <= recordTimestamp.abs()) {
                     effectiveUpdate++
                     targetEventRecord.checkInTime = recordNewStatus.unitDirection() * recordTimestamp
                 }
