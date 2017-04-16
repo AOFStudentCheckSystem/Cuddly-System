@@ -59,6 +59,11 @@ class StudentController {
     @RequestMapping(path = arrayOf("/list"), method = arrayOf(RequestMethod.GET))
     fun listAllStudentPaged(pageable: Pageable) = studentRepository.findAll(pageable)
 
+    @RequestMapping(path = arrayOf("/list/{studentId}"), method = arrayOf(RequestMethod.GET))
+    fun listOneStudentById(@PathVariable("studentId") studentID: String): Student {
+        return studentRepository.findByIdNumberIgnoreCase(studentID).get()
+    }
+
     @RequestMapping(path = arrayOf("/edit"), method = arrayOf(RequestMethod.POST))
     fun updateStudent(@RequestParam("idNumber") studentId: String,
                       @RequestParam("firstName", required = true, defaultValue = "") firstName: String,

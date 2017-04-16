@@ -2,6 +2,7 @@ package cn.com.guardiantech.checkin.server.controller
 
 import cn.codetector.jet.jetsimplejson.JSONArray
 import cn.com.guardiantech.checkin.server.entity.ActivityEvent
+import cn.com.guardiantech.checkin.server.entity.ActivityEventRecord
 import cn.com.guardiantech.checkin.server.entity.EventGroup
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EventGroupRepository
@@ -105,9 +106,5 @@ class EventGroupController {
     fun listAllEventGroups() = listEventGroups(PageRequest(0, Int.MAX_VALUE))
 
     @GetMapping(path = arrayOf("/list-available"))
-    fun listAvailable() {
-//        val events = listEventGroups().content.filter {
-//
-//        }
-    }
+    fun listAvailable(): ResponseEntity<Map<String, List<EventGroup>>> = ResponseEntity(Collections.singletonMap("groups", eventGroupRepo.findGroupWithoutBinding()), HttpStatus.OK)
 }

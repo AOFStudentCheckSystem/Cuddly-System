@@ -40,6 +40,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/event/listall")
                 .antMatchers("/event/list/**")
                 .antMatchers("/event/group/list")
+                .antMatchers("/event/group/listall")
+                .antMatchers("/event/group/list-available")
                 .antMatchers("/event/group/list/**")
                 //Signup
     }
@@ -69,6 +71,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/signup/signup/*").hasRole(Permission.SIGNUP.stringValue)
                 // Student
                 .antMatchers("/student/list").hasRole(Permission.USER.stringValue)
+                .antMatchers("/student/list/**").hasRole(Permission.USER.stringValue)
                 .antMatchers("/student/listall").hasRole(Permission.USER.stringValue)
                 .antMatchers("/student/create").hasRole(Permission.ADMIN.stringValue)
                 .antMatchers("/student/new").hasRole(Permission.ADMIN.stringValue)
