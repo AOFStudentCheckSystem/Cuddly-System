@@ -25,5 +25,5 @@ class SignUpSheet() {
     lateinit var name: String
 
     @ManyToMany(fetch = FetchType.LAZY)
-    var events:MutableSet<EventGroup> = hashSetOf()
+    var events:MutableList<EventGroup> = arrayListOf()
 }
