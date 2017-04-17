@@ -1,5 +1,6 @@
 package cn.com.guardiantech.checkin.server.controller
 
+import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EventRepository
@@ -40,8 +41,8 @@ class EventController {
             Date(time)
         }
         try {
-            eventRepo.save(ActivityEvent(name, eventDate, description))
-            return ActionResult(true).toString()
+            val evt = eventRepo.save(ActivityEvent(name, eventDate, description))
+            return JSONObject().put("success",true).put("newEvent", JSONObject().put("eventId", evt.eventId)).encode()
         } catch (e: Throwable) {
             return ActionResult(e).toString()
         }
