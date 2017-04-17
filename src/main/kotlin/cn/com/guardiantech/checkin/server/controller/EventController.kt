@@ -113,7 +113,7 @@ class EventController {
         }
         if (eventStatus.isNotEmpty()) {
             val newStatus = eventStatus.toInt()
-            if (newStatus <2 && newStatus >= 0) {
+            if (newStatus in 0..1) {
                 eventToEdit.eventStatus = newStatus
             }
         }
