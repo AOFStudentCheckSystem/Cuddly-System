@@ -40,6 +40,11 @@ class SignupController {
     @Autowired
     lateinit var groupRepository: EventGroupRepository
 
+    @RequestMapping(path = arrayOf("/edit/{id}"), method = arrayOf(RequestMethod.DELETE))
+    fun removeSheet(@PathVariable("id") id: Long): ResponseEntity<String> {
+        return ActionResult(sheetRepository.removeById(id) > 0).encode()
+    }
+
     @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
     fun createSheet(@RequestParam("name") sheetName: String,
                     @RequestParam("groups", required = false, defaultValue = "[]") groups: String): ResponseEntity<String> {
