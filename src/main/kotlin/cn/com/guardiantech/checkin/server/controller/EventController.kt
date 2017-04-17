@@ -33,15 +33,20 @@ class EventController {
 
     @RequestMapping(path = arrayOf("/create"), method = arrayOf(RequestMethod.POST))
     fun createEvent(@RequestParam("name") name: String,
-                    @RequestParam("descriptions", required = false, defaultValue = "") description: String,
+                    @RequestParam("description", required = false, defaultValue = "") description: String,
+                    @RequestParam("descriptions", required = false, defaultValue = "") descriptions: String,
                     @RequestParam("time", required = false, defaultValue = "0") time: Long): String {
+        var realDescription = description
+        if (description.isEmpty()) {
+            realDescription = descriptions
+        }
         val eventDate: Date = if (time == 0L) {
             Date()
         } else {
             Date(time)
         }
         try {
-            val evt = eventRepo.save(ActivityEvent(name, eventDate, description))
+            val evt = eventRepo.save(ActivityEvent(name, eventDate, realDescription))
             return JSONObject().put("success",true).put("newEvent", JSONObject().put("eventId", evt.eventId)).encode()
         } catch (e: Throwable) {
             return ActionResult(e).toString()

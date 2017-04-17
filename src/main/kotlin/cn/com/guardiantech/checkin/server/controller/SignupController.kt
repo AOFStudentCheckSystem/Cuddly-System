@@ -107,7 +107,6 @@ class SignupController {
                         @RequestParam("newName", required = false, defaultValue = "") name: String,
                         @RequestParam("newStatus", required = false, defaultValue = "") status: String): SignUpSheet? {
         val targetSheet = sheetRepository.findById(id).get()
-
         if (name.isNotEmpty()) {
             targetSheet.name = name
         }
