@@ -192,15 +192,6 @@ class SignupController {
         return ActionResult(true).encode()
     }
 
-    @RequestMapping(path = arrayOf("/edit/{id}"), method = arrayOf(RequestMethod.POST))
-    fun editSignup(@PathVariable("id") id: Long,
-                   @RequestParam("newName") newName: String): ResponseEntity<String> {
-        val target = sheetRepository.findById(id).get()
-        target.name = newName
-        sheetRepository.save(target)
-        return ActionResult(true).encode()
-    }
-
     @RequestMapping(path = arrayOf("/signup/{sheetId}"), method = arrayOf(RequestMethod.GET))
     fun showSignup(@AuthenticationPrincipal auth: Token,
                    @PathVariable sheetId: Long): ResponseEntity<String> {
