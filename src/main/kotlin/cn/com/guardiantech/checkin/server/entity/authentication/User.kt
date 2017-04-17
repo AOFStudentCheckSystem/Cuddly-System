@@ -32,6 +32,10 @@ class User() {
     var userLevel: Int = 1
 
     @JsonIgnore
+    @Column(columnDefinition = "bit(1) default 1")
+    var enabled: Boolean = true
+
+    @JsonIgnore
     lateinit var passwordHash: String
 
     @OneToOne(optional = true, orphanRemoval = true)

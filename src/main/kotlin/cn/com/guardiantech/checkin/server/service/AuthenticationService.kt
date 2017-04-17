@@ -29,6 +29,9 @@ class AuthenticationService {
             val token: Token
             if (userTokenFind.isPresent) {
                 token = userTokenFind.get()
+                if (!token.user.enabled) {
+                    throw UnauthorizedException()
+                }
                 token.lastActive = Date()
                 userTokenRepository.save(token)
             } else {

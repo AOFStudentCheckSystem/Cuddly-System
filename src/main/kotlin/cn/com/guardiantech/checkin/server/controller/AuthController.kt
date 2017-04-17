@@ -60,7 +60,7 @@ class AuthController {
             } else {
                 throw UnauthorizedException()
             }
-        } catch (e: NoSuchElementException) {
+        } catch (e: Throwable) {
             throw UnauthorizedException()
         }
     }
