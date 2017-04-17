@@ -35,6 +35,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/auth/auth")
                 .antMatchers("/auth/login")
                 .antMatchers("/auth/register")
+                .antMatchers("/auth/verify-token**")
                 //Event
                 .antMatchers("/event/list")
                 .antMatchers("/event/listall")

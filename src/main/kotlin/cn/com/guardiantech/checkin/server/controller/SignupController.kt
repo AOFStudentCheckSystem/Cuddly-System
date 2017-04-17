@@ -97,6 +97,24 @@ class SignupController {
         }
     }
 
+    @RequestMapping(path = arrayOf("/edit/{id}"), method = arrayOf(RequestMethod.POST))
+    fun editSignupSheet(@PathVariable("id") id:Long,
+                        @RequestParam("newName", required = false, defaultValue = "") name: String,
+                        @RequestParam("newStatus", required = false, defaultValue = "") status: String): SignUpSheet? {
+        val targetSheet = sheetRepository.findById(id).get()
+
+        if (name.isNotEmpty()) {
+            targetSheet.name = name
+        }
+        if (status.isNotBlank()) {
+            val statusI = status.toInt()
+            if (statusI in 0..2) {
+                targetSheet.status = statusI
+            }
+        }
+        return sheetRepository.save(targetSheet)
+    }
+
     @RequestMapping(path = arrayOf("/find/{id}"), method = arrayOf(RequestMethod.GET))
     fun findById(@PathVariable id: Long): SignUpSheet {
         return sheetRepository.findById(id).get()
@@ -126,7 +144,7 @@ class SignupController {
     fun changeStatus(@PathVariable("id") id: Long,
                      @PathVariable("targetStatus") status: Int): ResponseEntity<String> {
         val sheet = sheetRepository.findById(id).get()
-        if (status >= -1 && status <= 1) {
+        if (status in 0..2) {
             sheet.status = status
             sheetRepository.save(sheet)
             return ActionResult(true).encode()

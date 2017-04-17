@@ -6,6 +6,7 @@ import cn.com.guardiantech.checkin.server.entity.authentication.User
 import cn.com.guardiantech.checkin.server.entity.authentication.UserToken
 import cn.com.guardiantech.checkin.server.exception.UnauthorizedException
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
+import cn.com.guardiantech.checkin.server.repository.EmailTokenRepository
 import cn.com.guardiantech.checkin.server.repository.UserRepository
 import cn.com.guardiantech.checkin.server.repository.UserTokenRepository
 import org.apache.commons.codec.digest.DigestUtils
@@ -31,6 +32,21 @@ class AuthController {
 
     @Autowired
     lateinit var userTokenRepository: UserTokenRepository
+
+    @Autowired
+    lateinit var emailTokenRepository: EmailTokenRepository
+
+//    @RequestMapping(path = arrayOf("/verify-token"), method = arrayOf(RequestMethod.GET))
+//    fun verifyEmailAddress(@RequestParam("token", required = false, defaultValue = "") token: String): ResponseEntity<String> {
+//        println(token)
+//        val response = ResponseEntity<String>(HttpStatus.MOVED_PERMANENTLY)
+//        if (token.isNotEmpty()) {
+//            //Verify token here
+//            response.headers.add("Location", "https://www.aofactivities.com")
+////            response. = HttpStatus.MOVED_PERMANENTLY
+//        }
+//        return response
+//    }
 
     @RequestMapping(path = arrayOf("/logout"))
     fun revokeToken(@AuthenticationPrincipal p: Token) {
