@@ -30,10 +30,6 @@ class EventGroup() {
     @ManyToMany(fetch = FetchType.LAZY)
     var events: MutableSet<ActivityEvent> = hashSetOf()
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "events")
-    @JsonIgnore
-    var inGroups: MutableSet<SignUpSheet> = hashSetOf()
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
