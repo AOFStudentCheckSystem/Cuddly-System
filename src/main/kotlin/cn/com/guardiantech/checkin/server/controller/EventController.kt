@@ -112,7 +112,10 @@ class EventController {
             eventToEdit.eventDescription = newDescription
         }
         if (eventStatus.isNotEmpty()) {
-            eventToEdit.eventStatus = eventStatus.toInt()
+            val newStatus = eventStatus.toInt()
+            if (newStatus <2 && newStatus >= 0) {
+                eventToEdit.eventStatus = newStatus
+            }
         }
         eventRepo.save(eventToEdit)
         return ActionResult(true).encode()
