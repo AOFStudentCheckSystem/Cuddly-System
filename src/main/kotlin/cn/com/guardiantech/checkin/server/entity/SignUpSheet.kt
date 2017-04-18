@@ -1,5 +1,6 @@
 package cn.com.guardiantech.checkin.server.entity
 
+import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import org.jsondoc.core.annotation.ApiObjectField
@@ -24,6 +25,6 @@ class SignUpSheet() {
 
     lateinit var name: String
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    var events:MutableList<EventGroup> = arrayListOf()
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+    var events:MutableList<SignupSheetEntry> = arrayListOf()
 }

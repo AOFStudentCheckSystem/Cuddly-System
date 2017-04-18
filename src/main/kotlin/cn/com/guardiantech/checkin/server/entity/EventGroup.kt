@@ -1,5 +1,6 @@
 package cn.com.guardiantech.checkin.server.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.CascadeType
@@ -30,9 +31,9 @@ class EventGroup() {
     @ManyToMany(fetch = FetchType.LAZY)
     var events: MutableSet<ActivityEvent> = hashSetOf()
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "events")
-    @JsonIgnore
-    var inGroups: MutableSet<SignUpSheet> = hashSetOf()
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventGroup")
+    @JsonBackReference
+    var inEntries: MutableSet<SignupSheetEntry> = hashSetOf()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

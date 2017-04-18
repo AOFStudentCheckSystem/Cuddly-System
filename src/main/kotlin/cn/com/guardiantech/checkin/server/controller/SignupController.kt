@@ -3,17 +3,12 @@ package cn.com.guardiantech.checkin.server.controller
 import cn.codetector.jet.jetsimplejson.JSONArray
 import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.com.guardiantech.checkin.server.authentication.Token
-import cn.com.guardiantech.checkin.server.entity.ActivityEvent
-import cn.com.guardiantech.checkin.server.entity.ActivityEventRecord
-import cn.com.guardiantech.checkin.server.entity.EventGroup
-import cn.com.guardiantech.checkin.server.entity.SignUpSheet
+import cn.com.guardiantech.checkin.server.entity.*
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
-import cn.com.guardiantech.checkin.server.repository.EventGroupRepository
-import cn.com.guardiantech.checkin.server.repository.EventRecordRepository
-import cn.com.guardiantech.checkin.server.repository.EventRepository
-import cn.com.guardiantech.checkin.server.repository.SignUpSheetRepository
+import cn.com.guardiantech.checkin.server.repository.*
 import com.sun.deploy.net.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -30,6 +25,9 @@ import java.util.*
 class SignupController {
     @Autowired
     lateinit var sheetRepository: SignUpSheetRepository
+
+    @Autowired
+    lateinit var signupSheetEntryRepository: SignupSheetEntryRepository
 
     @Autowired
     lateinit var eventRepository: EventRepository
@@ -49,12 +47,17 @@ class SignupController {
     fun createSheet(@RequestParam("name") sheetName: String,
                     @RequestParam("groups", required = false, defaultValue = "[]") groups: String): ResponseEntity<String> {
         try {
+            val sheet = sheetRepository.save(SignUpSheet(sheetName))
             val jsonArrayGroup = JSONArray(groups)
-            val eventGroupList: MutableList<EventGroup> = arrayListOf()
+            val eventGroupList: MutableList<SignupSheetEntry> = arrayListOf()
             jsonArrayGroup.forEach {
-                eventGroupList.add(groupRepository.findById(it.toString().toLong()).get())
+                val id = (it as JSONObject).getLong("eventGroupId")
+                val weight = it.getInteger("weight")
+                val targetGroup = groupRepository.findById(id).get()
+                var entry = SignupSheetEntry(targetGroup, sheet, weight)
+                entry = signupSheetEntryRepository.save(entry)
+                eventGroupList.add(entry)
             }
-            val sheet = SignUpSheet(sheetName)
             sheet.events.addAll(eventGroupList)
             sheetRepository.save(sheet)
             return ActionResult(true).encode()
@@ -65,10 +68,11 @@ class SignupController {
 
     @RequestMapping(path = arrayOf("/edit/{id}/add"), method = arrayOf(RequestMethod.POST))
     fun addGroupToSheet(@RequestParam("group") group: Long,
+                        @RequestParam("weight") weight: Int,
                         @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
         val sht = sheetRepository.findById(sheetId).get()
-        sht.events.add(grp)
+        sht.events.add(signupSheetEntryRepository.save(SignupSheetEntry(grp, sht, weight)))
         sheetRepository.save(sht)
         return ActionResult(true).encode()
     }
@@ -78,7 +82,7 @@ class SignupController {
                              @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
         val sht = sheetRepository.findById(sheetId).get()
-        val result = sht.events.remove(grp)
+        val result = sht.events.remove(signupSheetEntryRepository.findByEventGroupAndSheet(grp, sht).get())
         sheetRepository.save(sht)
         return ActionResult(result, HttpStatus.NOT_ACCEPTABLE).encode()
     }
@@ -87,13 +91,18 @@ class SignupController {
     fun setGroupToSheet(@RequestParam("group") groups: String,
                         @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         try {
-            val jsonArrayGroup = JSONArray(groups)
-            val eventGroupList: MutableList<EventGroup> = arrayListOf()
-            jsonArrayGroup.forEach {
-                eventGroupList.add(groupRepository.findById(it.toString().toLong()).get())
-            }
             val sheet = sheetRepository.findById(sheetId).get()
+            val jsonArrayGroup = JSONArray(groups)
+            val eventGroupList: MutableList<SignupSheetEntry> = arrayListOf()
             sheet.events.clear()
+            jsonArrayGroup.forEach {
+                val id = (it as JSONObject).getLong("eventGroupId")
+                val weight = it.getInteger("weight")
+                val targetGroup = groupRepository.findById(id).get()
+                var entry = SignupSheetEntry(targetGroup, sheet, weight)
+                entry = signupSheetEntryRepository.save(entry)
+                eventGroupList.add(entry)
+            }
             sheet.events.addAll(eventGroupList)
             sheetRepository.save(sheet)
             return ActionResult(true).encode()
@@ -177,9 +186,9 @@ class SignupController {
             return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
         }
         sheet.events.forEach { group ->
-            val selectedOption = submitedSheet.getString(group.id.toString())
+            val selectedOption = submitedSheet.getString(group.eventGroup.id.toString())
             val selectedEvent = eventRepository.findByEventId(eventID = selectedOption).get()
-            if (group.events.contains(selectedEvent)) {
+            if (group.eventGroup.events.contains(selectedEvent)) {
                 val recordO = eventRecordRepository.findByEventAndStudent(selectedEvent, student)
                 val eventRecord: ActivityEventRecord
                 if (recordO.isPresent) {
@@ -207,7 +216,7 @@ class SignupController {
         val response = JSONObject().put("sheetId", sheet.id.toString())
         val sheetContent = JSONObject()
         sheet.events.forEach { group ->
-            val event = group.events.firstOrNull { event ->
+            val event = group.eventGroup.events.firstOrNull { event ->
                 val fetch = eventRecordRepository.findByEventAndStudent(event, student = student)
                 fetch.isPresent && fetch.get().signupTime != -1L
             }
@@ -215,4 +224,5 @@ class SignupController {
         }
         return ResponseEntity(response.put("sheet", sheetContent).encode(), HttpStatus.OK)
     }
+
 }

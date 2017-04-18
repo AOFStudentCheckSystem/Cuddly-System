@@ -24,6 +24,6 @@ interface EventGroupRepository: PagingAndSortingRepository<EventGroup, Long> {
     @Transactional
     fun removeById(id: Long): Long
 
-    @Query("select e from EventGroup e WHERE e.inGroups IS EMPTY")
+    @Query("select e from EventGroup e WHERE e.inEntries IS EMPTY")
     fun findGroupWithoutBinding(): List<EventGroup>
 }
