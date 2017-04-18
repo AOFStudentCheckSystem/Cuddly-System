@@ -7,6 +7,7 @@ import cn.com.guardiantech.checkin.server.repository.EmailVerificationTokenRepos
 import cn.com.guardiantech.checkin.server.repository.StudentRepository
 import cn.com.guardiantech.checkin.server.repository.UserRepository
 import cn.com.guardiantech.checkin.server.utils.isValidEmailAddress
+import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -38,10 +39,12 @@ class UserRegistrationService {
         if (newUser.isPresent) {
             return false
         }
-        var token = verifyTokenRepository.findByEmailIgnoreCase(email.toLowerCase()).orElseGet {
-            EmailVerificationToken(email, passwordHash)
-        }
+        val oldToken = verifyTokenRepository.findByEmailIgnoreCase(email.toLowerCase())
+        if (oldToken.isPresent)
+            verifyTokenRepository.delete(oldToken.get())
 
+        //Create Token
+        var token = EmailVerificationToken(email, DigestUtils.sha256Hex(passwordHash))
         val student = studentRepository.findByEmailIgnoreCase(email)
         if (student.isPresent) {
             token.linkedStudent = student.get()
