@@ -3,7 +3,7 @@ package cn.com.guardiantech.checkin.server.config
 import cn.com.guardiantech.checkin.server.authentication.AuthenticationFilter
 import cn.com.guardiantech.checkin.server.authentication.Permission
 import cn.com.guardiantech.checkin.server.service.AuthenticationService
-import cn.com.guardiantech.checkin.server.service.UserAuthenticationDetailService
+import cn.com.guardiantech.checkin.server.service.UserRegistrationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -24,7 +24,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 class WebSecurityConfig : WebSecurityConfigurerAdapter(){
 
     @Autowired
-    lateinit var authenticationDetail : UserAuthenticationDetailService
+    lateinit var authenticationDetail : UserRegistrationService
 
     @Autowired
     lateinit var authenticationService: AuthenticationService

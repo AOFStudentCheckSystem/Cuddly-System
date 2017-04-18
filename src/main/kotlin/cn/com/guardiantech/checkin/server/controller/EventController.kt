@@ -107,6 +107,9 @@ class EventController {
                   @RequestParam("newDescription", required = false, defaultValue = "") newDescription: String,
                   @RequestParam("newStatus", required = false, defaultValue = "") eventStatus: String): ResponseEntity<String> {
         val eventToEdit = eventRepo.findByEventId(eventID).get()
+        if (eventToEdit.eventStatus > 1) {
+            throw IllegalArgumentException("Action Edit is not allowed on completed events")
+        }
         if (newTime != 0L) {
             eventToEdit.eventTime = Date(newTime)
         }
@@ -117,9 +120,6 @@ class EventController {
             eventToEdit.eventDescription = newDescription
         }
         if (eventStatus.isNotEmpty()) {
-            if (eventToEdit.eventStatus > 1) {
-                throw IllegalArgumentException("Event can not be un-complete.")
-            }
             val newStatus = eventStatus.toInt()
             if (newStatus in 0..2) {
                 eventToEdit.eventStatus = newStatus

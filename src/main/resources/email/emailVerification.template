@@ -9,7 +9,7 @@
             Avon Old Farms School</h2>
     </div>
     <div style="padding: 40px; border: #DDD 1px solid; border-radius: 0 0 5px 5px; font-family: 'Helvetica Neue', Arial, sans-serif">
-        <h2>{{fistName}} {{lastName}}</h2>
+        <h2>{{firstName}} {{lastName}}</h2>
         <h4 style="font-weight: normal">You have registered on <i>Scribe - The AOF Weekend Activities Portal</i> with this email. Please verify that your name above is correct.</h4>
         <h4 style="font-weight: normal">If you have any questions, please email fengy@avonoldfarms.com</h4>
         <h3>Please click the link to verify that you own this email</h3>

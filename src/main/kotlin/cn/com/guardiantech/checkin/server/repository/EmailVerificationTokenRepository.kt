@@ -11,5 +11,6 @@ import java.util.*
 interface EmailVerificationTokenRepository : CrudRepository<EmailVerificationToken, String> {
 
     fun findById(id: String): Optional<EmailVerificationToken>
+    fun findByEmailIgnoreCase(email: String): Optional<EmailVerificationToken>
 
 }

@@ -9,8 +9,8 @@ import java.nio.charset.Charset
  */
 class MailTemplateFactory {
     companion object {
-        fun createTemlateByFileName(fileName: String): MailTemplate {
-            return MailTemplate(Resources.toString(Resources.getResource("/email/tokenNotification.template"), Charsets.UTF_8))
+        fun createTemplateByFileName(fileName: String): MailTemplate {
+            return MailTemplate(Resources.toString(Resources.getResource("/email/$fileName.template"), Charsets.UTF_8))
         }
     }
 }

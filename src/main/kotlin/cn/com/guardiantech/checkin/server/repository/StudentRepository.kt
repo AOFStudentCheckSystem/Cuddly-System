@@ -17,5 +17,7 @@ interface StudentRepository: PagingAndSortingRepository<Student, Long> {
 
     fun findByCardSecretIgnoreCase(card: String): Optional<Student>
 
+    fun findByEmailIgnoreCase(email: String): Optional<Student>
+
     override fun findAll(p0: Pageable): Page<Student>
 }

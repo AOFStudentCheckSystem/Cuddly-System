@@ -1,5 +1,6 @@
 package cn.com.guardiantech.checkin.server.service
 
+import cn.com.guardiantech.checkin.server.mail.MailTemplate
 import cn.com.guardiantech.checkin.server.mail.MailTemplateFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -23,10 +24,14 @@ class EmailService {
     lateinit var mailSender: JavaMailSender
 
     fun sendMail(templateName: String, values: HashMap<String, String>, vararg recipients: String) {
-        val template = MailTemplateFactory.createTemlateByFileName(if (templateName.endsWith(".template",true)) templateName else templateName + ".template")
+        val template = MailTemplateFactory.createTemplateByFileName(if (templateName.endsWith(".template",true)) templateName else templateName + ".template")
         values.forEach {
             template.setStringValue(it.key, it.value)
         }
+        sendMail(template, *recipients)
+    }
+
+    fun sendMail(template: MailTemplate, vararg recipients: String) {
         val msg = mailSender.createMimeMessage()
         msg.setFrom(from)
         msg.subject = "AOF Check In Test Mail"

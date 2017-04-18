@@ -9,6 +9,7 @@ import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
 import cn.com.guardiantech.checkin.server.repository.EmailTokenRepository
 import cn.com.guardiantech.checkin.server.repository.UserRepository
 import cn.com.guardiantech.checkin.server.repository.UserTokenRepository
+import cn.com.guardiantech.checkin.server.service.UserRegistrationService
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheEvict
@@ -36,10 +37,11 @@ class AuthController {
     @Autowired
     lateinit var emailTokenRepository: EmailTokenRepository
 
-//    @RequestMapping(path = arrayOf("/verify-token"), method = arrayOf(RequestMethod.GET))
-//    fun verifyEmailAddress(@RequestParam("token", required = false, defaultValue = "") token: String): ResponseEntity<String> {
-//        println(token)
-//        val response = ResponseEntity<String>(HttpStatus.MOVED_PERMANENTLY)
+    @Autowired
+    lateinit var registerServce: UserRegistrationService
+
+//    @RequestMapping(path = arrayOf("/verify-token"), method = arrayOf(RequestMethod.GET), produces = arrayOf(MediaType.TEXT_HTML_VALUE))
+//    fun verifyEmailAddress(@RequestParam("token", required = false, defaultValue = "") token: String): String {
 //        if (token.isNotEmpty()) {
 //            //Verify token here
 //            response.headers.add("Location", "https://www.aofactivities.com")
@@ -55,14 +57,7 @@ class AuthController {
 
     @RequestMapping(path = arrayOf("/register"), method = arrayOf(RequestMethod.POST))
     fun registerUser(@RequestParam("email") email: String,
-                     @RequestParam("password") password: String): ResponseEntity<String> {
-        try {
-            userRepository.save(User(email, DigestUtils.sha256Hex(password)))
-            return ActionResult(true).encode()
-        } catch (e: Throwable) {
-            return ActionResult(e).encode()
-        }
-    }
+                     @RequestParam("password") password: String): ResponseEntity<String> = ActionResult(registerServce.registerUserWithEmailAndPassword(email, password)).encode()
 
     @RequestMapping(path = arrayOf("/auth", "/login"), method = arrayOf(RequestMethod.POST))
     fun authenticate(@RequestParam("email") email: String,
