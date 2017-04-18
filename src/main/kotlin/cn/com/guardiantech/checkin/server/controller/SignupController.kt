@@ -91,10 +91,11 @@ class SignupController {
     fun setGroupToSheet(@RequestParam("group") groups: String,
                         @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         try {
-            val sheet = sheetRepository.findById(sheetId).get()
+            var sheet = sheetRepository.findById(sheetId).get()
             val jsonArrayGroup = JSONArray(groups)
             val eventGroupList: MutableList<SignupSheetEntry> = arrayListOf()
             sheet.events.clear()
+            sheet = sheetRepository.save(sheet)
             jsonArrayGroup.forEach {
                 val id = (it as JSONObject).getLong("eventGroupId")
                 val weight = it.getInteger("weight")
