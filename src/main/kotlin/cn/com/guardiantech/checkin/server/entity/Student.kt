@@ -35,6 +35,12 @@ class Student() {
     @Column(unique = true, length = 64)
     var cardSecret: String? = null
 
+    var studentType: Short = 0
+
+    var dorm: String = ""
+
+    var grade: Int = 0
+
     constructor(idNumber: String, lastName: String, firstName: String, preferredName: String): this() {
         this.idNumber = idNumber
         this.lastName = lastName
