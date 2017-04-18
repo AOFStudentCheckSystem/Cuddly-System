@@ -117,8 +117,11 @@ class EventController {
             eventToEdit.eventDescription = newDescription
         }
         if (eventStatus.isNotEmpty()) {
+            if (eventToEdit.eventStatus > 1) {
+                throw IllegalArgumentException("Event can not be un-complete.")
+            }
             val newStatus = eventStatus.toInt()
-            if (newStatus in 0..1) {
+            if (newStatus in 0..2) {
                 eventToEdit.eventStatus = newStatus
             }
         }
