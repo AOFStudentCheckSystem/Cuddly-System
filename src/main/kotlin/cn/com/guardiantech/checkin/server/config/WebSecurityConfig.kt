@@ -33,9 +33,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**")
         web.ignoring()
                 .antMatchers("/auth/auth")
+                .antMatchers("/auth/verify-token")
                 .antMatchers("/auth/login")
                 .antMatchers("/auth/register")
-                .antMatchers("/auth/verify-token**")
                 //Event
                 .antMatchers("/event/list")
                 .antMatchers("/event/listall")
@@ -77,6 +77,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/student/create").hasRole(Permission.ADMIN.stringValue)
                 .antMatchers("/student/new").hasRole(Permission.ADMIN.stringValue)
                 .antMatchers("/student/edit/**").hasRole(Permission.TABLET.stringValue)
+                // Account
+                .antMatchers("/account/**").hasRole(Permission.ADMIN.stringValue)
+                //Admin
+                .antMatchers("/admin/**").hasRole(Permission.ADMIN.stringValue)
                 .anyRequest().hasRole(Permission.ADMIN.stringValue)
     }
 }

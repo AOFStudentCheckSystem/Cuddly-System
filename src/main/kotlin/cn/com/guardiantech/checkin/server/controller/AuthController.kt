@@ -40,15 +40,13 @@ class AuthController {
     @Autowired
     lateinit var registerServce: UserRegistrationService
 
-//    @RequestMapping(path = arrayOf("/verify-token"), method = arrayOf(RequestMethod.GET), produces = arrayOf(MediaType.TEXT_HTML_VALUE))
-//    fun verifyEmailAddress(@RequestParam("token", required = false, defaultValue = "") token: String): String {
-//        if (token.isNotEmpty()) {
-//            //Verify token here
-//            response.headers.add("Location", "https://www.aofactivities.com")
-////            response. = HttpStatus.MOVED_PERMANENTLY
-//        }
-//        return response
-//    }
+    @RequestMapping(path = arrayOf("/verify-token"), method = arrayOf(RequestMethod.POST, RequestMethod.GET))
+    fun verifyEmailAddress(@RequestParam("token", required = false, defaultValue = "") token: String): ResponseEntity<String> {
+        if (token.isNotEmpty()) {
+            return ActionResult(registerServce.verifyTokenEnableAccount(token)).encode()
+        }
+        return ActionResult(false).encode()
+    }
 
     @RequestMapping(path = arrayOf("/logout"))
     fun revokeToken(@AuthenticationPrincipal p: Token) {

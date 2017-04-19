@@ -10,4 +10,7 @@ import java.util.*
  */
 interface UserRepository: CrudRepository<User, Long> {
     fun findByEmailIgnoreCase(email: String): Optional<User>
+
+    //Search Functions
+    fun findByEmailStartingWithIgnoreCase(emailBegin: String): List<User>
 }

@@ -136,22 +136,4 @@ class StudentController {
         studentRepository.save(targetStudent)
         return ActionResult(true).encode()
     }
-
-    @RequestMapping(path = arrayOf("/templink/{studentId}"))
-    fun tempLink(@AuthenticationPrincipal token: Token,
-                 @PathVariable("studentId") studentID: String): ResponseEntity<String> {
-        if (token is UserToken) {
-            token.user.student = studentRepository.findByIdNumberIgnoreCase(idNumber = studentID).get()
-            userRepositopry.save(token.user)
-        } else {
-            return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
-        }
-        return ActionResult(true).encode()
-    }
-
-    @RequestMapping(path = arrayOf("/templink/sendmail"))
-    fun tempEmail(@RequestParam("destAddr") addr: String): ResponseEntity<String> {
-        emailService.sendMail("tokenNotification", hashMapOf(Pair("link", "http://www.google.com")), addr)
-        return ActionResult(true).encode()
-    }
 }

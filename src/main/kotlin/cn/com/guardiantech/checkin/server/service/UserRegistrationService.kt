@@ -9,8 +9,6 @@ import cn.com.guardiantech.checkin.server.repository.UserRepository
 import cn.com.guardiantech.checkin.server.utils.isValidEmailAddress
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 /**
@@ -61,4 +59,21 @@ class UserRegistrationService {
         mailService.sendMail(mail, email)
         return true
     }
+
+    fun verifyTokenEnableAccount(token: String): Boolean{
+        val tkn = verifyTokenRepository.findById(token)
+        if (!tkn.isPresent)
+            return false
+        val _token = tkn.get()
+
+        val user = User(_token.email, _token.passwordHash)
+        if (_token.linkedStudent != null) {
+            user.student = _token.linkedStudent
+        }
+        userRepository.save(user)
+        verifyTokenRepository.delete(_token)
+        return true
+    }
+
+    fun verifyTokenExistance(token: String): Boolean = verifyTokenRepository.findById(token).isPresent
 }
