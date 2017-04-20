@@ -1,9 +1,15 @@
 package cn.com.guardiantech.checkin.server.controller
 
 import cn.codetector.jet.jetsimplejson.JSONObject
+import cn.com.guardiantech.checkin.server.authentication.Permission
+import cn.com.guardiantech.checkin.server.authentication.Token
 import cn.com.guardiantech.checkin.server.entity.ActivityEvent
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
+import cn.com.guardiantech.checkin.server.mail.MailTemplateFactory
+import cn.com.guardiantech.checkin.server.repository.EventRecordRepository
 import cn.com.guardiantech.checkin.server.repository.EventRepository
+import cn.com.guardiantech.checkin.server.service.EmailService
+import cn.com.guardiantech.checkin.server.utils.isValidEmailAddress
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -12,6 +18,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -25,6 +32,12 @@ class EventController {
 
     @Autowired
     lateinit var eventRepo: EventRepository
+
+    @Autowired
+    lateinit var eventRecordRepo: EventRecordRepository
+
+    @Autowired
+    lateinit var mailService: EmailService
 
     @RequestMapping(path = arrayOf("/remove/{id}"), method = arrayOf(RequestMethod.DELETE))
     fun removeEvent(@PathVariable("id") eventID: String): ResponseEntity<String> {
@@ -80,8 +93,8 @@ class EventController {
     fun creditEvent(@RequestParam("eventId", required = false, defaultValue = "") eventID: String,
                     @RequestParam("time", required = false, defaultValue = "0") newTime: Long,
                     @RequestParam("name", required = true) newName: String,
-                    @RequestParam("description", required = false, defaultValue = "") newDescription: String): ResponseEntity<String> {
-        val targetEvent: ActivityEvent
+                    @RequestParam("description", required = false, defaultValue = "") newDescription: String): String? {
+        var targetEvent: ActivityEvent
         if (eventID.isNotEmpty()) {
             targetEvent = eventRepo.findByEventId(eventID).orElseGet { ActivityEvent(newName) }
         } else {
@@ -96,10 +109,11 @@ class EventController {
         if (newDescription.isNotEmpty()) {
             targetEvent.eventDescription = newDescription
         }
-        eventRepo.save(targetEvent)
-        return ActionResult(true).encode()
+        targetEvent = eventRepo.save(targetEvent)
+        return JSONObject().put("success",true).put("event", JSONObject().put("eventId", targetEvent.eventId)).encode()
     }
 
+//    @RequestMapping(path = arrayOf("/batch-edit"), method = arrayOf())
     @RequestMapping(path = arrayOf("/edit"), method = arrayOf(RequestMethod.POST))
     fun editEvent(@RequestParam("eventId") eventID: String,
                   @RequestParam("newTime", required = false, defaultValue = "0") newTime: Long,
@@ -126,6 +140,41 @@ class EventController {
             }
         }
         eventRepo.save(eventToEdit)
+        return ActionResult(true).encode()
+    }
+
+    @RequestMapping(path = arrayOf("/sendmail"), method = arrayOf(RequestMethod.POST))
+    fun sendSummaryEmail(@RequestParam("eventId") eventId: String,
+                         @RequestParam("address") addr: String,
+                         @AuthenticationPrincipal auth: Token): ResponseEntity<String> {
+        if (!isValidEmailAddress(addr))
+            throw IllegalArgumentException("Invalid email address")
+        val event = eventRepo.findByEventId(eventId).get()
+        if (event.eventStatus < 2 && !auth.isAuthenticated(Permission.ADMIN)) {
+            throw IllegalArgumentException("Only completed events is allowed to compile a result list")
+        }
+        val template = MailTemplateFactory.createTemplateByFileName("eventNotify")
+
+        val emailContent = ArrayList<String>()
+        eventRecordRepo.findByEvent(event).filter { it.checkInTime > 0 }.sortedWith(kotlin.Comparator { o1, o2 ->
+            o1.student.lastName.compareTo(o2.student.lastName, true)
+        }).forEach {
+            val sb = StringBuilder()
+            sb.append(it.student.preferredName)
+                    .append(" ")
+                    .append(it.student.lastName)
+                    .append(" - ")
+                    .append(it.student.dorm)
+            emailContent.add(sb.toString())
+        }
+        template.setStringValue("eventName", event.eventName)
+        template.setStringValue("count", emailContent.size)
+        template.setListValue("studentList", emailContent)
+        template.setStringValue("eventId", event.eventId)
+        Thread(Runnable {
+            mailService.sendMailWithTitle(template, event.eventName, addr)
+        }).start()
+
         return ActionResult(true).encode()
     }
 }

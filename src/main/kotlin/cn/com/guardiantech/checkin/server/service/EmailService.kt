@@ -32,9 +32,13 @@ class EmailService {
     }
 
     fun sendMail(template: MailTemplate, vararg recipients: String) {
+        sendMailWithTitle(template, "AOF Check In System", *recipients)
+    }
+
+    fun sendMailWithTitle(template: MailTemplate, title: String, vararg recipients: String) {
         val msg = mailSender.createMimeMessage()
         msg.setFrom(from)
-        msg.subject = "AOF Check In Test Mail"
+        msg.subject = title
         msg.setText(template.encode(), "utf-8", "html")
         recipients.mapTo(HashSet<Address>(), ::InternetAddress).forEach {
             msg.addRecipient(Message.RecipientType.TO, it)

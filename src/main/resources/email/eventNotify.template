@@ -1,0 +1,21 @@
+<html>
+<meta charset="UTF-8">
+<body>
+<div style="margin: 40px auto; max-width: 750px; border-radius: 5px; box-shadow: #CCC 0 4px 6px; overflow: hidden; position: relative;">
+    <div style="padding: 40px;">
+        <p>{{eventName}}: </p>
+        <p>Total: {{count}}</p>
+        <br>
+        {{studentList}}
+    </div>
+    <div class="footer">
+        <a href="http://www.aofactivities.com">Cuddly System</a>
+        <br>
+        <a>{{eventId}}</a>
+    </div>
+</div>
+<div style="font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center;margin-top: 40px;color: #AAA;font-size: 14px;line-height: 24px;">
+    Built by Yaotian Feng, Peiqi Liu, Yuanchu Xie with ♥︎
+</div>
+</body>
+</html>

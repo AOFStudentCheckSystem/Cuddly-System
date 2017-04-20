@@ -52,6 +52,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
         http.antMatcher("/**")
                 .addFilterBefore(AuthenticationFilter(authenticationService), BasicAuthenticationFilter::class.java)
         http.authorizeRequests()
+                .antMatchers("/auth/verify").permitAll()
                 //Auth
                 .antMatchers("/auth/admin/**").hasRole(Permission.ADMIN.stringValue)
                 //CheckIn
@@ -62,6 +63,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/event/remove/**").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/new").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/edit/**").hasRole(Permission.TABLET.stringValue)
+                .antMatchers("/event/sendmail").hasRole(Permission.TABLET.stringValue)
                 // Sign ups
                 .antMatchers("/signup/create").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/signup/edit/**").hasRole(Permission.TABLET.stringValue)

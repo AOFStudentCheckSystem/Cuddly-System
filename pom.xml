@@ -142,14 +142,14 @@
                     <env>
                         <JAVA_OPTS>""</JAVA_OPTS>
                     </env>
-                    <entryPoint>[ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar"]
+                    <entryPoint>[ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /check-backend-deploy.jar"]
                     </entryPoint>
                     <exposes>10493</exposes>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
                             <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
+                            <include>check-backend-deploy.jar</include>
                         </resource>
                     </resources>
                     <serverId>docker-hub</serverId>
@@ -198,95 +198,95 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.jsondoc</groupId>
-                <artifactId>jsondoc-maven-plugin</artifactId>
-                <version>1.2.17</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>prepare-package</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.1</version>
-                    <basePath>http://hn2.guardiantech.com.cn:10493/</basePath>
-                    <packages>
-                        <package>cn.com.guardiantech.checkin.server.controller</package>
-                        <package>cn.com.guardiantech.checkin.server.entity</package>
-                        <package>cn.com.guardiantech.checkin.server</package>
-                    </packages>
-                    <outputFile>${project.build.directory}/jsondoc-ui/jsondoc.json</outputFile>
-                    <scanner>org.jsondoc.springmvc.scanner.Spring4JSONDocScanner</scanner>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.jsondoc</groupId>
-                                    <artifactId>jsondoc-ui</artifactId>
-                                    <version>1.2.17</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/jsondoc-ui</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <includes>
-                        <include>${project.build.directory}/jsondoc-ui/jsondoc-ui.html</include>
-                    </includes>
-                    <token>'_JSONDOC_OFFLINE_PLACEHOLDER_'</token> <!-- Do not change this value! -->
-                    <valueFile>${project.build.directory}/jsondoc-ui/jsondoc.json</valueFile>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>create-distribution</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>jsondoc</finalName>
-                            <descriptors>
-                                <descriptor>assembly/jsondoc-assembly.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.jsondoc</groupId>-->
+                <!--<artifactId>jsondoc-maven-plugin</artifactId>-->
+                <!--<version>1.2.17</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>generate</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>prepare-package</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<version>1.1</version>-->
+                    <!--<basePath>http://hn2.guardiantech.com.cn:10493/</basePath>-->
+                    <!--<packages>-->
+                        <!--<package>cn.com.guardiantech.checkin.server.controller</package>-->
+                        <!--<package>cn.com.guardiantech.checkin.server.entity</package>-->
+                        <!--<package>cn.com.guardiantech.checkin.server</package>-->
+                    <!--</packages>-->
+                    <!--<outputFile>${project.build.directory}/jsondoc-ui/jsondoc.json</outputFile>-->
+                    <!--<scanner>org.jsondoc.springmvc.scanner.Spring4JSONDocScanner</scanner>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<version>2.9</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>unpack</id>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>unpack</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<artifactItems>-->
+                                <!--<artifactItem>-->
+                                    <!--<groupId>org.jsondoc</groupId>-->
+                                    <!--<artifactId>jsondoc-ui</artifactId>-->
+                                    <!--<version>1.2.17</version>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>true</overWrite>-->
+                                    <!--<outputDirectory>${project.build.directory}/jsondoc-ui</outputDirectory>-->
+                                <!--</artifactItem>-->
+                            <!--</artifactItems>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>com.google.code.maven-replacer-plugin</groupId>-->
+                <!--<artifactId>replacer</artifactId>-->
+                <!--<version>1.5.3</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>replace</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<includes>-->
+                        <!--<include>${project.build.directory}/jsondoc-ui/jsondoc-ui.html</include>-->
+                    <!--</includes>-->
+                    <!--<token>'_JSONDOC_OFFLINE_PLACEHOLDER_'</token> &lt;!&ndash; Do not change this value! &ndash;&gt;-->
+                    <!--<valueFile>${project.build.directory}/jsondoc-ui/jsondoc.json</valueFile>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>create-distribution</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<finalName>jsondoc</finalName>-->
+                            <!--<descriptors>-->
+                                <!--<descriptor>assembly/jsondoc-assembly.xml</descriptor>-->
+                            <!--</descriptors>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
