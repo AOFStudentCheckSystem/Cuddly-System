@@ -188,25 +188,41 @@ class SignupController {
             group.eventGroup.events.forEach {
                 val recordO = eventRecordRepository.findByEventAndStudent(it, student)
                 val record: ActivityEventRecord
-                if (recordO.isPresent) {
-                    record = recordO.get()
-                } else {
-                    record = ActivityEventRecord()
-                    record.event = it
-                    record.student = student
-                }
-                if (selectedOption != "-1" && it.eventId == selectedOption) {
-                    // There is an option selected, and the current event is being selected
-                    if (record.signupTime != -1L) {
-                        record.signupTime = System.currentTimeMillis()
-                        eventRecordRepository.save(record)
+                if (selectedOption == "-1") {
+                    if (recordO.isPresent) {
+                        record = recordO.get()
+                        if (record.checkInTime != -1L) {
+                            record.signupTime = -1L
+                            eventRecordRepository.save(record)
+                        } else {
+                            eventRecordRepository.delete(record)
+                        }
                     }
                 } else {
-                    if (record.checkInTime != -1L) {
-                        record.signupTime = -1
-                        eventRecordRepository.save(record)
+                    if (it.eventId == selectedOption) {
+                        if (recordO.isPresent) {
+                            record = recordO.get()
+                            if (record.signupTime < 0) {
+                                record.signupTime = System.currentTimeMillis()
+                                eventRecordRepository.save(record)
+                            }
+                        } else {
+                            record = ActivityEventRecord()
+                            record.event = it
+                            record.student = student
+                            record.signupTime = System.currentTimeMillis()
+                            eventRecordRepository.save(record)
+                        }
                     } else {
-                        eventRecordRepository.delete(record)
+                        if (recordO.isPresent) {
+                            record = recordO.get()
+                            if (record.checkInTime != -1L) {
+                                record.signupTime = -1L
+                                eventRecordRepository.save(record)
+                            } else {
+                                eventRecordRepository.delete(record)
+                            }
+                        }
                     }
                 }
             }
