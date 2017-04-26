@@ -187,30 +187,27 @@ class SignupController {
             val selectedOption = submitedSheet.getString(group.eventGroup.id.toString())
             group.eventGroup.events.forEach {
                 val recordO = eventRecordRepository.findByEventAndStudent(it, student)
+                val record: ActivityEventRecord
                 if (recordO.isPresent) {
-                    val r = recordO.get()
-                    if (r.checkInTime > 0) {
-                        r.signupTime = -1
-                        eventRecordRepository.save(r)
-                    } else {
-                        eventRecordRepository.delete(r)
-                    }
+                    record = recordO.get()
+                } else {
+                    record = ActivityEventRecord()
+                    record.event = it
+                    record.student = student
                 }
-            }
-            if (selectedOption != "-1") {
-                val selectedEvent = eventRepository.findByEventId(eventID = selectedOption).get()
-                if (group.eventGroup.events.contains(selectedEvent)) {
-                    val recordO = eventRecordRepository.findByEventAndStudent(selectedEvent, student)
-                    val eventRecord: ActivityEventRecord
-                    if (recordO.isPresent) {
-                        eventRecord = recordO.get()
-                    } else {
-                        eventRecord = ActivityEventRecord()
-                        eventRecord.event = selectedEvent
-                        eventRecord.student = student
+                if (selectedOption != "-1" && it.eventId == selectedOption) {
+                    // There is an option selected, and the current event is being selected
+                    if (record.signupTime != -1L) {
+                        record.signupTime = System.currentTimeMillis()
+                        eventRecordRepository.save(record)
                     }
-                    eventRecord.signupTime = System.currentTimeMillis()
-                    eventRecordRepository.save(eventRecord)
+                } else {
+                    if (record.checkInTime != -1L) {
+                        record.signupTime = -1
+                        eventRecordRepository.save(record)
+                    } else {
+                        eventRecordRepository.delete(record)
+                    }
                 }
             }
         }
