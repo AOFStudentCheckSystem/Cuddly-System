@@ -9,9 +9,9 @@
             Avon Old Farms School</h2>
     </div>
     <div style="padding: 40px; border: #DDD 1px solid; border-radius: 0 0 5px 5px; font-family: 'Helvetica Neue', Arial, sans-serif">
-        <h2>Week 4 (2016 Dec 2 - 2016 Dec 6)</h2>
+        <h2>{{firstName}} {{lastName}}</h2>
         <h4 style="font-weight: normal">Click the link to view the sign-up sheet</h4>
-        <a href="{{link}}">{{link}}</a>
+        <a href="https://aofactivities.com/#/central_dogma?token={{token}}">https://aofactivities.com/#/central_dogma?token={{token}}</a>
         <div style="margin-top: 64px;  font-size: 14px;  line-height: 18px;  text-align: center;  color: #999;">
             <a href="" style="text-decoration: none;  color: #999;">Support</a>&nbsp;&bull;
             <a href="" style="text-decoration: none;  color: #999;">EULA</a>&nbsp;&bull;

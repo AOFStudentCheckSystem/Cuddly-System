@@ -25,6 +25,6 @@ class SignUpSheet() {
 
     lateinit var name: String
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+    @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
     var events:MutableList<SignupSheetEntry> = arrayListOf()
 }

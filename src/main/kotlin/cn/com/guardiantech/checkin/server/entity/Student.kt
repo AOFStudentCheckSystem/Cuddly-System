@@ -27,7 +27,7 @@ class Student() {
     lateinit var firstName: String
 
     @Column(length = 64)
-    lateinit var preferredName: String
+    var preferredName: String = ""
 
     @Column(unique = true, length = 64)
     var email: String? = null

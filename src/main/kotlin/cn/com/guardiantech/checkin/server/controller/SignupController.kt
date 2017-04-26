@@ -4,8 +4,12 @@ import cn.codetector.jet.jetsimplejson.JSONArray
 import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.com.guardiantech.checkin.server.authentication.Token
 import cn.com.guardiantech.checkin.server.entity.*
+import cn.com.guardiantech.checkin.server.entity.authentication.EmailToken
 import cn.com.guardiantech.checkin.server.httpEntity.ActionResult
+import cn.com.guardiantech.checkin.server.mail.MailTemplate
+import cn.com.guardiantech.checkin.server.mail.MailTemplateFactory
 import cn.com.guardiantech.checkin.server.repository.*
+import cn.com.guardiantech.checkin.server.service.EmailService
 import com.sun.deploy.net.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -15,6 +19,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Codetector on 2017/4/10.
@@ -23,20 +28,14 @@ import java.util.*
 @RestController
 @RequestMapping(path = arrayOf("/signup"), produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
 class SignupController {
-    @Autowired
-    lateinit var sheetRepository: SignUpSheetRepository
-
-    @Autowired
-    lateinit var signupSheetEntryRepository: SignupSheetEntryRepository
-
-    @Autowired
-    lateinit var eventRepository: EventRepository
-
-    @Autowired
-    lateinit var eventRecordRepository: EventRecordRepository
-
-    @Autowired
-    lateinit var groupRepository: EventGroupRepository
+    @Autowired lateinit var sheetRepository: SignUpSheetRepository
+    @Autowired lateinit var signupSheetEntryRepository: SignupSheetEntryRepository
+    @Autowired lateinit var eventRepository: EventRepository
+    @Autowired lateinit var eventRecordRepository: EventRecordRepository
+    @Autowired lateinit var groupRepository: EventGroupRepository
+    @Autowired lateinit var studentRepository: StudentRepository
+    @Autowired lateinit var emailTokenRepository: EmailTokenRepository
+    @Autowired lateinit var emailService: EmailService
 
     @RequestMapping(path = arrayOf("/edit/{id}"), method = arrayOf(RequestMethod.DELETE))
     fun removeSheet(@PathVariable("id") id: Long): ResponseEntity<String> {
@@ -183,7 +182,7 @@ class SignupController {
         val submitedSheet = obj.getJSONObject("sheet")
         // Check against the declared SignUpSheet, see if there is any missing field
         val sheet = sheetRepository.findById(obj.getLong("id")).get()
-        if (!sheet.events.all { submitedSheet.containsKey(it.id.toString()) }) {
+        if (!sheet.events.all { submitedSheet.containsKey(it.eventGroup.id.toString()) }) {
             return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
         }
         sheet.events.forEach { group ->
@@ -225,5 +224,38 @@ class SignupController {
         }
         return ResponseEntity(response.put("sheet", sheetContent).encode(), HttpStatus.OK)
     }
+
+    @RequestMapping(path = arrayOf("/sendmail"), method= arrayOf(RequestMethod.POST))
+    fun sendMail(@RequestParam("students", required = false, defaultValue = "") studentList: String): ResponseEntity<String> {
+        val students: List<Student>
+        if (studentList.isNotEmpty()) {
+            students = ArrayList()
+            JSONArray(studentList).forEach { item ->
+                if (item is String) {
+                    students.add(studentRepository.findByIdNumberIgnoreCase(item).get())
+                }
+            }
+        } else {
+            students = studentRepository.findByEmailIsNotNull()
+        }
+        val tokens : MutableList<MailTemplate> = ArrayList()
+        students.forEach {
+            val token = emailTokenRepository.save(EmailToken(it))
+            val mail = MailTemplateFactory.createTemplateByFileName("tokenNotification")
+            mail.recipientAddress = it.email?:""
+            mail.setStringValue("lastName", it.lastName)
+            mail.setStringValue("firstName", it.firstName)
+            mail.setStringValue("token", token.tokenSecret)
+            tokens.add(mail)
+        }
+        Thread(Runnable {
+            tokens.forEach {
+                println("Sending... ${it.recipientAddress}")
+                emailService.sendMail(it, it.recipientAddress)
+            }
+        }).start()
+        return ActionResult(true).encode()
+    }
+
 
 }

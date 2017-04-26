@@ -25,7 +25,7 @@ class ActivityEventRecord {
     @JoinColumn(name = "student")
     lateinit var student: Student
 
-    @JsonManagedReference
+    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(optional = false)
     @JoinColumn(name = "event")

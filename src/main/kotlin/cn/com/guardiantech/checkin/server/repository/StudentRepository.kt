@@ -19,5 +19,7 @@ interface StudentRepository: PagingAndSortingRepository<Student, Long> {
 
     fun findByEmailIgnoreCase(email: String): Optional<Student>
 
+    fun findByEmailIsNotNull(): List<Student>
+
     override fun findAll(p0: Pageable): Page<Student>
 }

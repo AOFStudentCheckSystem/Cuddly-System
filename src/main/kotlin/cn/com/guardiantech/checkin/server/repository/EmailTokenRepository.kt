@@ -15,7 +15,7 @@ import java.util.*
  */
 interface EmailTokenRepository : CrudRepository<EmailToken, String>{
     @Cacheable("email_tokens")
-    fun findByTokenSecretIgnoreCase(secret: String): Optional<UserToken>
+    fun findByTokenSecretIgnoreCase(secret: String): Optional<EmailToken>
 
     @Query("delete from email_tokens where creation_date < DATE_SUB(NOW(), INTERVAL ?1 DAY)", nativeQuery = true)
     @Modifying

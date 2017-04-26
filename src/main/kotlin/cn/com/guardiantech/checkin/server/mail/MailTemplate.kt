@@ -3,6 +3,8 @@ package cn.com.guardiantech.checkin.server.mail
 import java.util.*
 
 class MailTemplate constructor(var templateContent: String) {
+    var recipientAddress: String = ""
+
     fun setStringValue(templateKey: String, value: Any) {
         templateContent = this.templateContent.replace("{{" + templateKey + "}}", value.toString());
     }

@@ -53,12 +53,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .addFilterBefore(AuthenticationFilter(authenticationService), BasicAuthenticationFilter::class.java)
         http.authorizeRequests()
                 .antMatchers("/auth/verify").permitAll()
+                .antMatchers("/auth/logout").permitAll()
                 //Auth
                 .antMatchers("/auth/admin/**").hasRole(Permission.ADMIN.stringValue)
                 //CheckIn
                 .antMatchers("/checkin/**").hasRole(Permission.TABLET.stringValue)
                 // Events
                 .antMatchers("/event/create").hasRole(Permission.TABLET.stringValue)
+                .antMatchers("/event/edit").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/records/list").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/remove/**").hasRole(Permission.TABLET.stringValue)
                 .antMatchers("/event/group/new").hasRole(Permission.TABLET.stringValue)
@@ -72,6 +74,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter(){
                 .antMatchers("/signup/list/**").hasRole(Permission.SIGNUP.stringValue)
                 .antMatchers("/signup/signup").hasRole(Permission.SIGNUP.stringValue)
                 .antMatchers("/signup/signup/*").hasRole(Permission.SIGNUP.stringValue)
+                .antMatchers("/signup/sendmail").hasRole(Permission.ADMIN.stringValue)
                 // Student
                 .antMatchers("/student/list").hasRole(Permission.USER.stringValue)
                 .antMatchers("/student/list/**").hasRole(Permission.USER.stringValue)

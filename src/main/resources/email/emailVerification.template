@@ -13,7 +13,7 @@
         <h4 style="font-weight: normal">You have registered on <i>Scribe - The AOF Weekend Activities Portal</i> with this email. Please verify that your name above is correct.</h4>
         <h4 style="font-weight: normal">If you have any questions, please email fengy@avonoldfarms.com</h4>
         <h3>Please click the link to verify that you own this email</h3>
-        <a href="https://www.aofactivities.com/login?token={{link}}">https://www.aofactivities.com/login?token={{link}}</a>
+        <a href="https://www.aofactivities.com/#/login?token={{link}}">https://www.aofactivities.com/#/login?token={{link}}</a>
         <div style="margin-top: 64px;  font-size: 14px;  line-height: 18px;  text-align: center;  color: #999;">
             <a href="" style="text-decoration: none;  color: #999;">Support</a>&nbsp;&bull;
             <a href="" style="text-decoration: none;  color: #999;">EULA</a>&nbsp;&bull;
