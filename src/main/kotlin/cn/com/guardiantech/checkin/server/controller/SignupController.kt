@@ -10,9 +10,7 @@ import cn.com.guardiantech.checkin.server.mail.MailTemplate
 import cn.com.guardiantech.checkin.server.mail.MailTemplateFactory
 import cn.com.guardiantech.checkin.server.repository.*
 import cn.com.guardiantech.checkin.server.service.EmailService
-import com.sun.deploy.net.HttpResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -57,7 +55,7 @@ class SignupController {
                 entry = signupSheetEntryRepository.save(entry)
                 eventGroupList.add(entry)
             }
-            sheet.events.addAll(eventGroupList)
+            sheet.entries.addAll(eventGroupList)
             sheetRepository.save(sheet)
             return ActionResult(true).encode()
         } catch (e: Throwable) {
@@ -71,7 +69,7 @@ class SignupController {
                         @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
         val sht = sheetRepository.findById(sheetId).get()
-        sht.events.add(signupSheetEntryRepository.save(SignupSheetEntry(grp, sht, weight)))
+        sht.entries.add(signupSheetEntryRepository.save(SignupSheetEntry(grp, sht, weight)))
         sheetRepository.save(sht)
         return ActionResult(true).encode()
     }
@@ -81,7 +79,7 @@ class SignupController {
                              @PathVariable("id") sheetId: Long): ResponseEntity<String> {
         val grp = groupRepository.findById(group).get()
         val sht = sheetRepository.findById(sheetId).get()
-        val result = sht.events.remove(signupSheetEntryRepository.findByEventGroupAndSheet(grp, sht).get())
+        val result = sht.entries.remove(signupSheetEntryRepository.findByEventGroupAndSheet(grp, sht).get())
         sheetRepository.save(sht)
         return ActionResult(result, HttpStatus.NOT_ACCEPTABLE).encode()
     }
@@ -93,7 +91,7 @@ class SignupController {
             var sheet = sheetRepository.findById(sheetId).get()
             val jsonArrayGroup = JSONArray(groups)
             val eventGroupList: MutableList<SignupSheetEntry> = arrayListOf()
-            sheet.events.clear()
+            sheet.entries.clear()
             sheet = sheetRepository.save(sheet)
             jsonArrayGroup.forEach {
                 val id = (it as JSONObject).getLong("eventGroupId")
@@ -103,7 +101,7 @@ class SignupController {
                 entry = signupSheetEntryRepository.save(entry)
                 eventGroupList.add(entry)
             }
-            sheet.events.addAll(eventGroupList)
+            sheet.entries.addAll(eventGroupList)
             sheetRepository.save(sheet)
             return ActionResult(true).encode()
         } catch (e: Throwable) {
@@ -182,10 +180,10 @@ class SignupController {
         val submitedSheet = obj.getJSONObject("sheet")
         // Check against the declared SignUpSheet, see if there is any missing field
         val sheet = sheetRepository.findById(obj.getLong("id")).get()
-        if (!sheet.events.all { submitedSheet.containsKey(it.eventGroup.id.toString()) }) {
+        if (!sheet.entries.all { submitedSheet.containsKey(it.eventGroup.id.toString()) }) {
             return ActionResult(false, HttpStatus.NOT_ACCEPTABLE).encode()
         }
-        sheet.events.forEach { group ->
+        sheet.entries.forEach { group ->
             val selectedOption = submitedSheet.getString(group.eventGroup.id.toString())
             val selectedEvent = eventRepository.findByEventId(eventID = selectedOption).get()
             if (group.eventGroup.events.contains(selectedEvent)) {
@@ -215,12 +213,12 @@ class SignupController {
         val sheet = sheetRepository.findById(sheetId).get()
         val response = JSONObject().put("sheetId", sheet.id.toString())
         val sheetContent = JSONObject()
-        sheet.events.forEach { group ->
+        sheet.entries.forEach { group ->
             val event = group.eventGroup.events.firstOrNull { event ->
                 val fetch = eventRecordRepository.findByEventAndStudent(event, student = student)
                 fetch.isPresent && fetch.get().signupTime != -1L
             }
-            sheetContent.put(group.id.toString(), event?.eventId ?: "-1")
+            sheetContent.put(group.eventGroup.id.toString(), event?.eventId ?: "-1")
         }
         return ResponseEntity(response.put("sheet", sheetContent).encode(), HttpStatus.OK)
     }

@@ -26,5 +26,5 @@ class SignUpSheet() {
     lateinit var name: String
 
     @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
-    var events:MutableList<SignupSheetEntry> = arrayListOf()
+    var entries:MutableList<SignupSheetEntry> = arrayListOf()
 }
