@@ -185,19 +185,33 @@ class SignupController {
         }
         sheet.entries.forEach { group ->
             val selectedOption = submitedSheet.getString(group.eventGroup.id.toString())
-            val selectedEvent = eventRepository.findByEventId(eventID = selectedOption).get()
-            if (group.eventGroup.events.contains(selectedEvent)) {
-                val recordO = eventRecordRepository.findByEventAndStudent(selectedEvent, student)
-                val eventRecord: ActivityEventRecord
+            group.eventGroup.events.forEach {
+                val recordO = eventRecordRepository.findByEventAndStudent(it, student)
                 if (recordO.isPresent) {
-                    eventRecord = recordO.get()
-                } else {
-                    eventRecord = ActivityEventRecord()
-                    eventRecord.event = selectedEvent
-                    eventRecord.student = student
+                    val r = recordO.get()
+                    if (r.checkInTime > 0) {
+                        r.signupTime = -1
+                        eventRecordRepository.save(r)
+                    } else {
+                        eventRecordRepository.delete(r)
+                    }
                 }
-                eventRecord.signupTime = System.currentTimeMillis()
-                eventRecordRepository.save(eventRecord)
+            }
+            if (selectedOption != "-1") {
+                val selectedEvent = eventRepository.findByEventId(eventID = selectedOption).get()
+                if (group.eventGroup.events.contains(selectedEvent)) {
+                    val recordO = eventRecordRepository.findByEventAndStudent(selectedEvent, student)
+                    val eventRecord: ActivityEventRecord
+                    if (recordO.isPresent) {
+                        eventRecord = recordO.get()
+                    } else {
+                        eventRecord = ActivityEventRecord()
+                        eventRecord.event = selectedEvent
+                        eventRecord.student = student
+                    }
+                    eventRecord.signupTime = System.currentTimeMillis()
+                    eventRecordRepository.save(eventRecord)
+                }
             }
         }
         return ActionResult(true).encode()
