@@ -148,7 +148,7 @@ class SignupController {
 
     @RequestMapping(path = arrayOf("/list/past"), method = arrayOf(RequestMethod.GET))
     fun listPast(): ResponseEntity<MutableMap<String, List<SignUpSheet>>> {
-        return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(-1)), HttpStatus.OK)
+        return ResponseEntity(Collections.singletonMap("signUps", listSheetsWithStatus(2)), HttpStatus.OK)
     }
 
     @RequestMapping(path = arrayOf("/edit/{id}/{targetStatus}"), method = arrayOf(RequestMethod.PATCH))
