@@ -2,6 +2,7 @@ package cn.com.guardiantech.checkin.server.controller.advices
 
 import cn.codetector.jet.jetsimplejson.JSONObject
 import cn.codetector.jet.jetsimplejson.exception.DecodeException
+import cn.com.guardiantech.checkin.server.exception.PermissionDeniedException
 import cn.com.guardiantech.checkin.server.exception.UnauthorizedException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,6 +20,9 @@ import kotlin.IllegalArgumentException
 
 @ControllerAdvice
 class ControllerExceptionHandler {
+    @ExceptionHandler(PermissionDeniedException::class)
+    fun accessDeniedExceptionhandler() = ResponseEntity("Insufficient Permission", HttpStatus.FORBIDDEN)
+
     @ExceptionHandler(UnauthorizedException::class)
     fun unAuthorizedExceptionHandler() = ResponseEntity(JSONObject().put("error", "unauthorized").encode(), HttpStatus.UNAUTHORIZED)
 
