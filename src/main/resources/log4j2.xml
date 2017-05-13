@@ -10,9 +10,9 @@
                 <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingRandomAccessFile>
-        <RollingRandomAccessFile name="ServicesLog" fileName="logs/services/latest.log"
-                                 filePattern="logs/services/%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level] [%logger{1}]: %msg%n"/>
+        <RollingRandomAccessFile name="ServicesLog" fileName="/var/log/checkin/request-backup-latest.log"
+                                 filePattern="/var/log/checkin/request-backup-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%level] [%logger{1}]: %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <OnStartupTriggeringPolicy/>
@@ -20,6 +20,9 @@
         </RollingRandomAccessFile>
     </Appenders>
     <Loggers>
+        <Logger name="cn.com.guardiantech.checkin.service.backup">
+            <AppenderRef ref="ServiceLog"/>
+        </Logger>
         <Root level="INFO">
             <AppenderRef ref="SysOut"/>
             <AppenderRef ref="File" level="warn"/>
